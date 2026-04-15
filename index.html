@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Op+cent | AI搭載 オーダーメイド顧客管理システム</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#1e3a8a', // blue-900 (信頼感のネイビー)
+                            light: '#eff6ff',   // blue-50
+                            dark: '#172554',    // blue-950
+                        },
+                        accent: {
+                            DEFAULT: '#f97316', // orange-500 (コンバージョンのオレンジ)
+                            hover: '#ea580c',   // orange-600
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'Meiryo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+        .hero-bg {
+            /* ダミー画像を削除し、ネイビー系のグラデーションに変更しました */
+            background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%);
+        }
+        .ai-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased bg-white">
+
+    <!-- Header (Sticky) -->
+    <header class="fixed w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-brand text-2xl"></i>
+                <span class="text-2xl font-bold text-brand tracking-tight">Op<span class="text-accent">+</span>cent</span>
+            </div>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="#troubles" class="text-gray-600 hover:text-brand transition">お悩み</a>
+                <a href="#features" class="text-gray-600 hover:text-brand transition">選ばれる理由</a>
+                <a href="#ai" class="text-gray-600 hover:text-brand transition">AI機能</a>
+                <a href="#price" class="text-gray-600 hover:text-brand transition">料金プラン</a>
+            </div>
+            <div>
+                <a href="#contact" class="bg-accent hover:bg-accent-hover text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5">
+                    無料相談はこちら
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. ヒーローセクション / キャッチコピー -->
+    <section class="hero-bg min-h-[90vh] flex items-center pt-20">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center text-white">
+                <p class="text-lg md:text-xl font-medium mb-4 text-orange-300">
+                    <i class="fa-solid fa-check-circle mr-2"></i>IT導入補助金（AI枠・インボイス枠）対応で最大80%補助！
+                </p>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6">
+                    経営の<span class="text-accent">「事務作業」</span>をゼロへ。
+                </h1>
+                <p class="text-xl md:text-2xl font-bold mb-8 opacity-90">
+                    現場から生まれた、AI搭載のオーダーメイド顧客管理システム『Op+cent』
+                </p>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 mb-10 text-left md:text-center border border-white/20">
+                    <p class="text-lg md:text-xl font-medium leading-relaxed">
+                        Optimize（最適化）× Centralization（一元化）。<br class="hidden md:block">
+                        給与計算、スケジュール調整、煩雑な入校手続きをひとつのシステムに。<br>
+                        <strong>「顧客サービス」と「売上を伸ばすこと」に集中できる環境を作りませんか？</strong>
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#contact" class="bg-accent hover:bg-accent-hover text-white text-lg font-bold py-4 px-10 rounded-full shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 flex items-center justify-center">
+                        無料で資料を請求する
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. こんなお悩み、ありませんか？ -->
+    <section id="troubles" class="py-20 bg-brand-light">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">こんなお悩み、ありませんか？</h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+            </div>
+
+            <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8 md:p-12 border-t-4 border-accent">
+                <ul class="space-y-6 text-lg text-gray-700">
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-accent mt-1 mr-4 text-xl"></i>
+                        <span>スタッフごとに歩合や条件が違い、<strong>月末の給与計算に何時間もかかっている</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-accent mt-1 mr-4 text-xl"></i>
+                        <span>お客様に紙の用紙に書いてもらい、それを<strong>パソコンに入力する作業が大変</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-accent mt-1 mr-4 text-xl"></i>
+                        <span>ネットの入会画面は入力項目が多く、<strong>お客様が途中でやめてしまう</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-accent mt-1 mr-4 text-xl"></i>
+                        <span>免許証など身分証のコピーを取ったり、<strong>保管場所を確保する管理が面倒</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-accent mt-1 mr-4 text-xl"></i>
+                        <span>市販のシステムは自社のルールに合わず、<strong>現場が使いこなせない</strong></span>
+                    </li>
+                </ul>
+                <div class="mt-10 text-center font-bold text-xl text-brand">
+                    <p>そのお悩み、すべて<span class="text-accent text-2xl mx-1">『Op+cent』</span>が解決します！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 選ばれる3つの理由 -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">選ばれる3つの理由</h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 理由1 -->
+                <div class="bg-gray-50 rounded-2xl p-8 text-center border border-gray-200 hover:shadow-xl transition duration-300">
+                    <div class="w-20 h-20 bg-brand text-white rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-lg">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand mb-4">① 現役の経営者が開発！<br>かゆい所に手が届く機能</h3>
+                    <p class="text-gray-600 text-left">
+                        複数の店舗を展開する現役経営者が、「本当に現場で使えるシステム」を自ら開発。顧客管理から給与計算まで、経営のすべてをフルカバーします。
+                    </p>
+                </div>
+
+                <!-- 理由2 -->
+                <div class="bg-gray-50 rounded-2xl p-8 text-center border border-gray-200 hover:shadow-xl transition duration-300">
+                    <div class="w-20 h-20 bg-brand text-white rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-lg">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand mb-4">② 自社のルールに合わせた<br>「100%カスタマイズ」</h3>
+                    <p class="text-gray-600 text-left">
+                        パッケージをベースに、貴社専用にカスタマイズ。不要な機能は外し、必要な機能だけを搭載するため、現場のスタッフが迷わず使えます。
+                    </p>
+                </div>
+
+                <!-- 理由3 -->
+                <div class="bg-gray-50 rounded-2xl p-8 text-center border border-gray-200 hover:shadow-xl transition duration-300">
+                    <div class="w-20 h-20 bg-brand text-white rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-lg">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand mb-4">③ 圧倒的なコストパフォーマンス<br>（IT導入補助金対応）</h3>
+                    <p class="text-gray-600 text-left">
+                        「インボイス枠」や「AI導入枠」を最大限に活用できる機能設計。初期費用250万円の高度なシステムが、実質50万円程度のご負担で導入可能です。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. ユーザー別 機能一覧 -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">ユーザー別 機能一覧</h2>
+                <p class="text-gray-600">各ユーザーの視点に立ち、使いやすさを追求した機能設計です。</p>
+                <div class="w-20 h-1 bg-accent mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 管理者向け -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-brand text-white py-4 px-6 flex items-center gap-3">
+                        <i class="fa-solid fa-user-shield text-2xl"></i>
+                        <h3 class="text-xl font-bold">管理者向け</h3>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span>予約一括管理</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span>顧客情報・カルテ管理</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span>入金管理（インボイス対応）</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span class="font-bold text-brand">複雑な条件にも対応する自動給料計算</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- スタッフ向け -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-teal-600 text-white py-4 px-6 flex items-center gap-3">
+                        <i class="fa-solid fa-chalkboard-user text-2xl"></i>
+                        <h3 class="text-xl font-bold">スタッフ向け</h3>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span>自身のスケジュール管理</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span>業務の報告</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-accent mt-1"></i><span class="font-bold text-teal-700">AIメッセージ作成アシスト</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 顧客向け -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="bg-orange-500 text-white py-4 px-6 flex items-center gap-3">
+                        <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                        <h3 class="text-xl font-bold">顧客向け</h3>
+                    </div>
+                    <div class="p-6">
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand mt-1"></i><span class="font-bold text-orange-600">スマホで完結するオンライン入会手続き</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand mt-1"></i><span>休会・退会申請</span></li>
+                            <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand mt-1"></i><span>支払い状況の確認</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 【AI活用による経営サポート】 -->
+    <section id="ai" class="py-24 ai-bg text-white relative overflow-hidden">
+        <!-- AIっぽい装飾 -->
+        <div class="absolute top-0 right-0 opacity-10">
+            <i class="fa-solid fa-network-wired text-[20rem]"></i>
+        </div>
+        
+        <div class="container mx-auto px-4 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="bg-white text-brand font-bold py-1 px-4 rounded-full text-sm tracking-widest mb-4 inline-block">IT導入補助金 AI枠対応</span>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">AI活用による経営サポート</h2>
+                <p class="text-lg opacity-90 max-w-2xl mx-auto">
+                    Op+centは、最新のAI技術で教室経営を支援します。<br>
+                    補助金の「AI枠」にも対応し、次世代の運営基盤を構築します。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- AI 1 -->
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:bg-white/20 transition">
+                    <div class="text-accent text-4xl mb-4"><i class="fa-solid fa-robot"></i></div>
+                    <h3 class="text-xl font-bold mb-3">AIチャットボット<br><span class="text-sm font-normal opacity-80">（よくある質問の自動応答）</span></h3>
+                    <p class="text-sm leading-relaxed opacity-90">
+                        「来週休みたい」「引き落とし日はいつ？」などの定型的な質問にAIが24時間自動で回答。スタッフの対応時間を大幅に削減します。
+                    </p>
+                </div>
+
+                <!-- AI 2 -->
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:bg-white/20 transition">
+                    <div class="text-accent text-4xl mb-4"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3 class="text-xl font-bold mb-3">AIデータ分析</h3>
+                    <p class="text-sm leading-relaxed opacity-90 mt-8">
+                        体験からの入会率や売上推移をAIが分析・可視化し、経営の次の一手をサポートします。
+                    </p>
+                </div>
+
+                <!-- AI 3 -->
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:bg-white/20 transition">
+                    <div class="text-accent text-4xl mb-4"><i class="fa-solid fa-brain"></i></div>
+                    <h3 class="text-xl font-bold mb-3">AI情報管理</h3>
+                    <p class="text-sm leading-relaxed opacity-90 mt-8">
+                        蓄積された顧客とのやり取りやカルテ情報をAIが整理。必要な情報を瞬時に引き出します。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 導入事例 -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">導入事例 <span class="text-lg font-normal text-gray-500">（先行導入モジュール実績）</span></h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="border rounded-2xl p-8 md:p-10 shadow-sm relative">
+                    <!-- ラベル -->
+                    <div class="absolute -top-5 left-8 bg-brand text-white font-bold py-2 px-6 rounded-full shadow-md">
+                        <i class="fa-solid fa-music mr-2"></i>音楽教室 スタジオA様の場合
+                    </div>
+
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                        <!-- Before -->
+                        <div class="bg-gray-100 p-6 rounded-xl relative">
+                            <h4 class="text-gray-500 font-bold mb-3 flex items-center"><i class="fa-solid fa-face-frown text-xl mr-2"></i>導入前の課題</h4>
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                受付での説明や用紙の印刷、記入された用紙をパソコンに入力する作業に毎月多くの時間を取られていた。また、免許証のコピーや保管などの管理も煩雑だった。
+                            </p>
+                            <!-- 矢印 (PC用) -->
+                            <div class="hidden md:block absolute top-1/2 -right-6 transform -translate-y-1/2 text-accent text-4xl z-10">
+                                <i class="fa-solid fa-circle-arrow-right bg-white rounded-full"></i>
+                            </div>
+                            <!-- 矢印 (スマホ用) -->
+                            <div class="md:hidden text-center mt-4 text-accent text-3xl">
+                                <i class="fa-solid fa-circle-arrow-down"></i>
+                            </div>
+                        </div>
+
+                        <!-- After -->
+                        <div class="bg-orange-50 p-6 rounded-xl border border-orange-200">
+                            <h4 class="text-accent font-bold mb-3 flex items-center"><i class="fa-solid fa-face-smile-beam text-xl mr-2"></i>導入後の効果</h4>
+                            <p class="text-gray-800 text-sm leading-relaxed">
+                                『Op+cent』の基盤となる入校管理モジュール（入会届・休会届・退会届・会員登録機能）を導入。<br><br>
+                                お客様は来店せずとも<strong>自宅からスマホ一つで手続きが完結</strong>するようになった。ブラウザ上で動作するカメラ機能により身分証の回収もスムーズになり、<strong>手書き文字の読解やPCへの打ち直し作業がゼロ</strong>になったことで、<strong>スタッフの時間が大幅に増えた！</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 料金プラン -->
+    <section id="price" class="py-20 bg-gray-50 border-t border-gray-200">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">料金プラン <span class="text-lg font-normal text-gray-500">（補助金活用シミュレーション）</span></h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+                <p class="mt-4 text-gray-700">IT導入補助金を活用することで、ハイエンドなシステムを驚きの価格で導入可能です。</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-brand">
+                    <div class="bg-brand text-white text-center py-6">
+                        <h3 class="text-2xl font-bold tracking-wider">プレミアムAIプラン</h3>
+                        <p class="mt-2 opacity-90 text-sm">基本機能 ＋ 自動給与計算 ＋ AI機能搭載</p>
+                    </div>
+                    
+                    <div class="p-8 md:p-12 text-center">
+                        <div class="mb-6 text-gray-500">
+                            システム販売価格
+                            <span class="line-through text-2xl mx-2">2,500,000円</span><span class="text-sm">（税別）</span>
+                        </div>
+                        
+                        <div class="bg-orange-50 rounded-xl p-6 mb-8 border border-orange-200 relative">
+                            <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-accent text-white text-sm font-bold py-1 px-4 rounded-full">
+                                IT導入補助金（AI導入枠）活用で
+                            </div>
+                            <div class="text-gray-700 font-bold mb-2">実質負担額</div>
+                            <div class="text-accent font-black text-4xl md:text-6xl tracking-tighter">
+                                約<span class="mx-1">500,000</span><span class="text-2xl">円</span>
+                            </div>
+                        </div>
+
+                        <ul class="text-sm text-gray-600 text-left space-y-2 mb-8 bg-gray-50 p-4 rounded text-center">
+                            <li>※カスタマイズ費用・初期セットアップを含みます。</li>
+                            <li>※別途、月額保守・メンテナンス費用（20,000円/月）が発生します。</li>
+                        </ul>
+
+                        <a href="#contact" class="block w-full bg-accent hover:bg-accent-hover text-white text-xl font-bold py-4 rounded-full shadow-lg transition duration-300">
+                            補助金の対象になるか相談する（無料）
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. フッター / 運営会社情報 -->
+    <footer id="contact" class="bg-brand-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 border-b border-white/20 pb-12">
+                <!-- 会社情報 -->
+                <div>
+                    <div class="flex items-center gap-2 mb-6">
+                        <i class="fa-solid fa-layer-group text-2xl text-accent"></i>
+                        <span class="text-3xl font-bold tracking-tight">Op<span class="text-accent">+</span>cent</span>
+                    </div>
+                    <h4 class="font-bold mb-4 text-lg border-b border-white/20 pb-2 inline-block">運営会社情報</h4>
+                    <table class="w-full text-sm opacity-80">
+                        <tbody>
+                            <tr class="border-b border-white/10">
+                                <th class="py-3 text-left w-24 font-normal">会社名</th>
+                                <td class="py-3">合同会社Tonality</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <th class="py-3 text-left font-normal">代表社員</th>
+                                <td class="py-3">戸城 孝啓</td>
+                            </tr>
+                            <tr>
+                                <th class="py-3 text-left font-normal align-top">所在地</th>
+                                <td class="py-3">〒470-0115<br>愛知県日進市赤池町箕ノ手2番地754</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- お問い合わせフォーム (PHPへ送信) -->
+                <div class="bg-white/5 p-6 rounded-xl">
+                    <h4 class="font-bold mb-6 text-xl text-center">導入のご相談・お問い合わせ</h4>
+                    <form action="send_mail.php" method="POST" class="space-y-4">
+                        <div>
+                            <input type="text" name="companyName" required placeholder="貴社名・教室名" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
+                        </div>
+                        <div>
+                            <input type="text" name="contactName" required placeholder="ご担当者様名" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
+                        </div>
+                        <div>
+                            <input type="email" name="contactEmail" required placeholder="メールアドレス" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
+                        </div>
+                        <div>
+                            <textarea name="contactMessage" required rows="4" placeholder="お問い合わせ内容" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3 rounded transition duration-300">
+                            送信する
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center text-sm opacity-60">
+                <div class="mb-4">
+                    <a href="security.html" class="hover:text-accent transition hover:underline">情報セキュリティ基本方針</a>
+                </div>
+                &copy; 2026 Tonality LLC. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

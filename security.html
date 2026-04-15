@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情報セキュリティ基本方針 | Op+cent</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#1e3a8a',
+                            light: '#eff6ff',
+                            dark: '#172554',
+                        },
+                        accent: {
+                            DEFAULT: '#f97316',
+                            hover: '#ea580c',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'Meiryo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans JP', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                <i class="fa-solid fa-layer-group text-brand text-2xl"></i>
+                <span class="text-2xl font-bold text-brand tracking-tight">Op<span class="text-accent">+</span>cent</span>
+            </a>
+            <a href="index.html" class="text-sm font-medium text-gray-600 hover:text-brand transition flex items-center gap-1">
+                <i class="fa-solid fa-arrow-left"></i> LPへ戻る
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 lg:px-8 py-16">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8 md:p-12 border-t-4 border-brand">
+            
+            <div class="text-center mb-12">
+                <h1 class="text-3xl font-bold text-brand mb-4">情報セキュリティ基本方針</h1>
+                <p class="text-gray-600 text-sm">制定日：2026年4月1日</p>
+            </div>
+
+            <div class="space-y-8 text-gray-700 leading-relaxed text-sm md:text-base">
+                <p>
+                    合同会社Tonality（以下、「当社」）は、オーダーメイド教室管理システム『Op+cent』をはじめとするITサービスの提供を通じて、お客様の重要な情報を多数取り扱っております。<br>
+                    お客様からお預かりした情報資産および当社の情報資産をあらゆる脅威から保護し、適切な安全管理を実現するため、ここに情報セキュリティ基本方針を定めます。
+                </p>
+
+                <section>
+                    <h2 class="text-xl font-bold text-brand mb-3 border-b pb-2">1. 情報セキュリティ管理体制の構築</h2>
+                    <p>
+                        当社は、情報セキュリティの維持及び改善のために組織を設置し、情報セキュリティ対策を社内の正式な規則として定めます。
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-brand mb-3 border-b pb-2">2. 情報資産の保護</h2>
+                    <p>
+                        当社は、保有するすべての情報資産の機密性、完全性及び可用性を確実に保護するために、組織的、技術的に適切な対策を講じます。特に『Op+cent』においては、最新のセキュリティ技術を用いたシステム開発・運用を徹底します。
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-brand mb-3 border-b pb-2">3. 法令及び契約上の要求事項の遵守</h2>
+                    <p>
+                        当社は、情報セキュリティに関わる法令、規制、規範、契約上の義務を遵守するとともに、お客様の期待に応えます。
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-brand mb-3 border-b pb-2">4. 継続的な改善</h2>
+                    <p>
+                        当社は、情報セキュリティに関する取り組みを定期的に評価・見直し、社会情勢や技術の変化に応じた継続的な改善を実施します。
+                    </p>
+                </section>
+                
+                <div class="mt-12 pt-8 border-t text-right">
+                    <p class="font-bold">合同会社Tonality</p>
+                    <p>代表社員　戸城 孝啓</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-white py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center text-sm opacity-80">
+            &copy; 2026 Tonality LLC. All Rights Reserved.
+        </div>
+    </footer>
+
+</body>
+</html>
