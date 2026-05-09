@@ -339,46 +339,195 @@
     <section id="price" class="py-20 bg-gray-50 border-t border-gray-200">
         <div class="container mx-auto px-4 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">料金プラン <span class="text-lg font-normal text-gray-500">（補助金活用シミュレーション）</span></h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4">料金プラン</h2>
                 <div class="w-20 h-1 bg-accent mx-auto"></div>
-                <p class="mt-4 text-gray-700">※IT導入支援事業者として採択された場合、以下のような補助金を活用した導入シミュレーションが可能となる予定です。</p>
+                <p class="mt-4 text-gray-600">Op+centのラインナップから、貴校のニーズに合わせたプランをお選びください。</p>
             </div>
 
-            <div class="max-w-3xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-brand">
-                    <div class="bg-brand text-white text-center py-6">
-                        <h3 class="text-2xl font-bold tracking-wider">プレミアムAIプラン</h3>
-                        <p class="mt-2 opacity-90 text-sm">基本機能 ＋ 自動給与計算 ＋ AI機能搭載</p>
+            <!-- ── Op+cent01 ── -->
+            <div class="mb-20">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="bg-brand text-white text-xs font-bold px-3 py-1 rounded-full">Op+cent01</span>
+                    <h3 class="text-2xl font-bold text-brand">入校申請システム</h3>
+                </div>
+                <p class="text-gray-500 mb-10 text-sm">マルチステップ形式を採用し、離脱率を改善する入校・入会管理システム</p>
+
+                <!-- 3プラン -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <!-- Standard -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 flex flex-col">
+                        <div class="bg-gray-100 py-6 px-6 text-center">
+                            <p class="text-xs font-bold tracking-widest text-gray-400 mb-1">STANDARD</p>
+                            <p class="text-lg font-bold text-gray-600 mb-3">スタンダード</p>
+                            <p class="text-4xl font-black text-brand">¥30,000</p>
+                            <p class="text-xs text-gray-400 mt-1">税込</p>
+                        </div>
+                        <div class="p-6 flex-1">
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand mt-0.5 shrink-0"></i>1枚完結型のシンプル構成</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand mt-0.5 shrink-0"></i>基本機能を網羅</li>
+                            </ul>
+                        </div>
                     </div>
-                    
-                    <div class="p-8 md:p-12 text-center">
-                        <div class="mb-6 text-gray-500">
-                            システム販売価格
-                            <span class="line-through text-2xl mx-2">2,500,000円</span><span class="text-sm">（税別）</span>
-                        </div>
-                        
-                        <!-- 枠の上部マージン(mt-8)と内側のパディング(pt-10)を追加し、かぶりを解消 -->
-                        <div class="bg-orange-50 rounded-xl px-4 md:px-6 pb-6 pt-10 md:pt-12 mb-8 border border-orange-200 relative opacity-80 mt-8">
-                            <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-gray-600 text-white text-xs md:text-sm font-bold py-2 px-4 rounded-full w-[95%] md:w-max shadow-md leading-tight flex items-center justify-center">
-                                IT導入補助金 適用時のシミュレーション（予定）
-                            </div>
-                            <div class="text-gray-700 font-bold mb-2 mt-2">実質負担額</div>
-                            <div class="text-accent font-black text-4xl md:text-6xl tracking-tighter">
-                                約<span class="mx-1">500,000</span><span class="text-2xl">円</span>
-                            </div>
-                        </div>
 
-                        <ul class="text-sm text-gray-600 text-left space-y-2 mb-8 bg-gray-50 p-4 rounded text-center">
-                            <li>※IT導入補助金の交付決定を受けた場合のシミュレーションであり、実際の金額を保証するものではありません。</li>
-                            <li>※カスタマイズ費用・初期セットアップを含みます。</li>
-                            <li>※別途、月額保守・メンテナンス費用（20,000円/月）が発生します。</li>
-                        </ul>
+                    <!-- Advance -->
+                    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-brand flex flex-col relative">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap shadow">人気プラン</div>
+                        <div class="bg-brand py-6 px-6 text-center text-white mt-2">
+                            <p class="text-xs font-bold tracking-widest opacity-70 mb-1">ADVANCE</p>
+                            <p class="text-lg font-bold mb-3">アドバンス</p>
+                            <p class="text-4xl font-black">¥40,000<span class="text-lg font-normal opacity-70">〜</span></p>
+                            <p class="text-2xl font-black">¥100,000</p>
+                            <p class="text-xs opacity-70 mt-1">税込</p>
+                        </div>
+                        <div class="p-6 flex-1">
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand mt-0.5 shrink-0"></i>ステップ分けによるUI改善</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-brand mt-0.5 shrink-0"></i>複雑な条件分岐ロジックに対応</li>
+                            </ul>
+                        </div>
+                    </div>
 
-                        <a href="#contact" class="block w-full bg-accent hover:bg-accent-hover text-white text-xl font-bold py-4 rounded-full shadow-lg transition duration-300">
-                            導入に関するご相談はこちら（無料）
-                        </a>
+                    <!-- Professional -->
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 flex flex-col">
+                        <div class="bg-gray-800 py-6 px-6 text-center text-white">
+                            <p class="text-xs font-bold tracking-widest opacity-60 mb-1">PROFESSIONAL</p>
+                            <p class="text-lg font-bold mb-3">プロフェッショナル</p>
+                            <p class="text-4xl font-black">¥80,000<span class="text-lg font-normal opacity-60">〜</span></p>
+                            <p class="text-2xl font-black">¥160,000</p>
+                            <p class="text-xs opacity-60 mt-1">税込</p>
+                        </div>
+                        <div class="p-6 flex-1">
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gray-700 mt-0.5 shrink-0"></i>高機能マルチステップ</li>
+                                <li class="flex items-start gap-2"><i class="fa-solid fa-check text-gray-700 mt-0.5 shrink-0"></i>身分証明書取り込み・本人確認機能付き</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+
+                <!-- オプション -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+                    <div class="bg-gray-50 border-b border-gray-200 px-6 py-4 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-brand"></i>
+                        <h4 class="font-bold text-brand">オプション</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-100">
+                                    <th class="text-left px-6 py-3 font-bold text-gray-500">オプション名</th>
+                                    <th class="text-right px-6 py-3 font-bold text-gray-500">価格（税込）</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="px-6 py-4 text-gray-700">データ移行アプリ作成</td>
+                                    <td class="px-6 py-4 text-right font-bold text-brand">¥50,000〜¥100,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-gray-700">オンライン入校用紙</td>
+                                    <td class="px-6 py-4 text-right font-bold text-brand">¥30,000〜¥60,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 text-gray-700">規約・Q&amp;Aページ追加</td>
+                                    <td class="px-6 py-4 text-right font-bold text-brand">¥20,000〜¥30,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 特典 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 flex items-start gap-4">
+                        <i class="fa-solid fa-tags text-accent text-2xl mt-0.5 shrink-0"></i>
+                        <div>
+                            <p class="font-bold text-accent mb-1">セット購入割引</p>
+                            <p class="text-sm text-gray-700">2つ以上同時契約で、安価な方から<strong>20% OFF</strong></p>
+                        </div>
+                    </div>
+                    <div class="bg-orange-50 border border-orange-200 rounded-xl p-5 flex items-start gap-4">
+                        <i class="fa-solid fa-gift text-accent text-2xl mt-0.5 shrink-0"></i>
+                        <div>
+                            <p class="font-bold text-accent mb-1">紹介特典</p>
+                            <p class="text-sm text-gray-700">成約時に<strong>¥5,000キャッシュバック</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Op+cent02 ── -->
+            <div class="mb-16">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-full">Op+cent02</span>
+                    <h3 class="text-2xl font-bold text-brand">クラウド型業務管理システム</h3>
+                </div>
+                <p class="text-gray-500 mb-10 text-sm">整体・サロン向けDX・インボイス対応パッケージ。最新Ver.1.1</p>
+
+                <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-brand">
+                    <!-- ヘッダー：価格 -->
+                    <div class="bg-brand text-white px-8 py-8 text-center">
+                        <span class="bg-accent text-white text-xs font-bold px-4 py-1 rounded-full inline-block mb-4">プロフェッショナル・グロースプラン</span>
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
+                            <div class="text-center">
+                                <p class="text-xs opacity-70 mb-1">システム総額</p>
+                                <p class="text-2xl font-bold line-through opacity-50">¥1,200,000（税込）</p>
+                            </div>
+                            <div class="text-3xl font-black opacity-40 hidden md:block">→</div>
+                            <div class="bg-white/10 border border-white/30 rounded-xl px-8 py-5">
+                                <p class="text-xs font-bold text-orange-300 mb-1">IT導入補助金2026（インボイス枠）活用時</p>
+                                <p class="text-sm opacity-80 mb-1">実質負担額</p>
+                                <p class="text-5xl font-black text-orange-300">約 ¥334,000</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ボディ：内容・機能 -->
+                    <div class="p-8 md:p-10">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <div>
+                                <h4 class="font-bold text-brand mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-box-open text-accent"></i>パッケージ内容
+                                </h4>
+                                <ul class="space-y-3 text-sm text-gray-700">
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>初期環境構築</li>
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>2年分ライセンス一括</li>
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>導入研修</li>
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>データ移行支援</li>
+                                </ul>
+                                <div class="mt-4 bg-gray-50 rounded-lg p-3 text-xs text-gray-500 border border-gray-200">
+                                    ※ 3年目以降：月額 ¥30,000（税込）
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-brand mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-star text-accent"></i>主要機能
+                                </h4>
+                                <ul class="space-y-3 text-sm text-gray-700">
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>インボイス制度準拠の給与・売上管理</li>
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>AIによるデータ解析・需要予測プログラム（導入予定）</li>
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>顧客専用マイページ（24時間予約・デジタル問診票）</li>
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-check text-accent mt-0.5 shrink-0"></i>画像対応電子カルテ</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="#contact" class="inline-block bg-accent hover:bg-accent-hover text-white text-lg font-bold py-4 px-12 rounded-full shadow-lg transition duration-300">
+                                導入に関するご相談はこちら（無料）
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 共通注記 -->
+            <div class="max-w-2xl mx-auto bg-white border border-gray-200 rounded-xl p-6 text-sm text-gray-500 space-y-2">
+                <p class="flex items-start gap-2"><i class="fa-solid fa-circle-info text-brand mt-0.5 shrink-0"></i>表示価格は全て税込です。</p>
+                <p class="flex items-start gap-2"><i class="fa-solid fa-circle-info text-brand mt-0.5 shrink-0"></i>納期は発注から約2週間〜1ヶ月程度です。</p>
+                <p class="flex items-start gap-2"><i class="fa-solid fa-circle-info text-brand mt-0.5 shrink-0"></i>仕様の詳細は別途お打ち合わせにて決定します。</p>
+                <p class="flex items-start gap-2"><i class="fa-solid fa-circle-info text-brand mt-0.5 shrink-0"></i>IT導入補助金の交付決定を受けた場合のシミュレーションであり、実際の金額を保証するものではありません。</p>
             </div>
         </div>
     </section>
