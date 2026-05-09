@@ -410,23 +410,26 @@
                     </table>
                 </div>
 
-                <!-- お問い合わせフォーム (PHPへ送信) -->
+                <!-- お問い合わせフォーム -->
                 <div class="bg-white/5 p-6 rounded-xl">
                     <h4 class="font-bold mb-6 text-xl text-center">導入のご相談・お問い合わせ</h4>
-                    <form action="send_mail.php" method="POST" class="space-y-4">
+                    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
+                        <input type="hidden" name="access_key" value="ed4be9ea-d3c4-4472-b517-2ffc0076a513">
+                        <input type="hidden" name="subject" value="【Op+cent】LPからのお問い合わせ">
+                        <input type="hidden" name="from_name" value="Op+cent LP">
                         <div>
-                            <input type="text" name="companyName" required placeholder="貴社名・教室名" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
+                            <input type="text" name="貴社名・教室名" required placeholder="貴社名・教室名" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
                         </div>
                         <div>
-                            <input type="text" name="contactName" required placeholder="ご担当者様名" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
+                            <input type="text" name="ご担当者様名" required placeholder="ご担当者様名" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
                         </div>
                         <div>
-                            <input type="email" name="contactEmail" required placeholder="メールアドレス" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
+                            <input type="email" name="メールアドレス" required placeholder="メールアドレス" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent">
                         </div>
                         <div>
-                            <textarea name="contactMessage" required rows="4" placeholder="お問い合わせ内容" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent resize-none"></textarea>
+                            <textarea name="お問い合わせ内容" required rows="4" placeholder="お問い合わせ内容" class="w-full px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-accent resize-none"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3 rounded transition duration-300">
+                        <button type="submit" id="submitBtn" class="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3 rounded transition duration-300">
                             送信する
                         </button>
                     </form>
@@ -442,5 +445,31 @@
         </div>
     </footer>
 
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = '送信中...';
+            try {
+                const res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: new FormData(this)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('お問い合わせを送信しました。担当者からの連絡をお待ちください。');
+                    this.reset();
+                } else {
+                    alert('送信に失敗しました。お手数ですが時間をおいて再度お試しください。');
+                }
+            } catch {
+                alert('送信に失敗しました。お手数ですが時間をおいて再度お試しください。');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '送信する';
+            }
+        });
+    </script>
 </body>
 </html>
