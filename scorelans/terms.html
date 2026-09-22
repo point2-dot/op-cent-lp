@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScoreLens 利用規約</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #f5f4ef;
+    --paper-raised: #ffffff;
+    --ink: #23252a;
+    --ink-soft: #5c5f66;
+    --ink-faint: #8a8d93;
+    --rule: #dcd8cd;
+    --rule-strong: #c7c2b3;
+    --accent: #a83c2c;
+    --accent-soft: #f1ded9;
+    --link: #8a3224;
+    --focus: #a83c2c;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper: #1a1a1d;
+      --paper-raised: #232326;
+      --ink: #e9e7e1;
+      --ink-soft: #a7a5a0;
+      --ink-faint: #77767a;
+      --rule: #35353a;
+      --rule-strong: #46464c;
+      --accent: #e08a72;
+      --accent-soft: #3a2620;
+      --link: #e8a893;
+    }
+  }
+
+  *{ box-sizing: border-box; }
+  html{ color-scheme: light dark; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans JP", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    margin: 0;
+    padding-inline: max(16px, calc((100vw - 720px) / 2));
+    padding-block: clamp(28px, 6vw, 72px);
+  }
+  a{ color: var(--link); text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible{ outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .sheet{ max-width: 680px; margin-inline: auto; }
+
+  header.title-block{ margin-bottom: 8px; }
+  .wordmark{
+    display: flex;
+    align-items: baseline;
+    gap: 0.6ch;
+    flex-wrap: wrap;
+  }
+  .wordmark .mark{
+    font-family: "Newsreader", serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .wordmark .name{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+  }
+  h1{
+    font-family: "Newsreader", serif;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 5vw, 2.5rem);
+    line-height: 1.25;
+    margin: 0.5em 0 0.3em;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  .meta{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .meta span + span::before{ content: "・"; color: var(--ink-faint); margin: 0 0.5em; }
+
+  .staff{
+    height: 22px;
+    margin: 28px 0 32px;
+    background-image: repeating-linear-gradient(var(--rule), var(--rule) 1px, transparent 1px, transparent 5px);
+    background-size: 100% 100%;
+    opacity: 0.9;
+  }
+
+  nav.toc{
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin-bottom: 44px;
+  }
+  nav.toc p{
+    margin: 0 0 10px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+  nav.toc ol{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    columns: 2;
+    column-gap: 24px;
+  }
+  nav.toc li{ break-inside: avoid; margin-bottom: 6px; }
+  nav.toc a{ font-size: 0.92rem; color: var(--ink-soft); text-decoration: none; }
+  nav.toc a:hover{ color: var(--link); text-decoration: underline; }
+  @media (max-width: 480px){ nav.toc ol{ columns: 1; } }
+
+  section.article{
+    padding-block: 30px;
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: 20px;
+  }
+  section.article:first-of-type{ border-top: none; padding-top: 0; }
+
+  h2{
+    font-family: "Newsreader", serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin: 0 0 0.7em;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6ch;
+  }
+  h2 .num{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  p{ margin: 0 0 1em; color: var(--ink); max-width: 65ch; }
+  p:last-child{ margin-bottom: 0; }
+  ul.plain, ol.plain{ margin: 0 0 1em; padding-left: 1.3em; }
+  ul.plain li, ol.plain li{ margin-bottom: 0.5em; }
+  ul.plain li:last-child, ol.plain li:last-child{ margin-bottom: 0; }
+
+  table.perm{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 1em;
+    font-size: 0.95rem;
+  }
+  table.perm th, table.perm td{
+    text-align: left;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.perm th{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  table.perm td.k{ white-space: nowrap; color: var(--ink); font-weight: 500; }
+  .scroller{ overflow-x: auto; }
+
+  .callout{
+    background: var(--accent-soft);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin: 0 0 1em;
+    font-size: 0.95rem;
+  }
+  .callout strong{ color: var(--accent); }
+
+  footer{
+    margin-top: 20px;
+    padding-top: 28px;
+    border-top: 2px solid var(--rule-strong);
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  footer .company{ font-weight: 500; color: var(--ink); }
+  footer address{ font-style: normal; line-height: 1.8; }
+  footer a{ color: var(--link); }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="title-block">
+    <div class="wordmark">
+      <span class="mark">ScoreLens</span>
+      <span class="name">score_viewer / com.tonality.scorelens</span>
+    </div>
+    <h1>利用規約</h1>
+    <p class="meta"><span>制定日：2026年9月22日</span><span>提供者：合同会社Tonality</span></p>
+  </header>
+
+  <div class="staff" aria-hidden="true"></div>
+
+  <nav class="toc" aria-label="目次">
+    <p>目次</p>
+    <ol>
+      <li><a href="#t1">第1条　適用</a></li>
+      <li><a href="#t2">第2条　サービスの内容</a></li>
+      <li><a href="#t3">第3条　利用資格・アカウント</a></li>
+      <li><a href="#t4">第4条　禁止事項</a></li>
+      <li><a href="#t5">第5条　知的財産権</a></li>
+      <li><a href="#t6">第6条　利用料金・課金プラン</a></li>
+      <li><a href="#t7">第7条　お試し期間</a></li>
+      <li><a href="#t8">第8条　外部サービス連携</a></li>
+      <li><a href="#t9">第9条　サービスの変更・中断・終了</a></li>
+      <li><a href="#t10">第10条　免責事項</a></li>
+      <li><a href="#t11">第11条　本規約の変更</a></li>
+      <li><a href="#t12">第12条　準拠法・管轄裁判所</a></li>
+      <li><a href="#t13">第13条　お問い合わせ窓口</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section class="article" id="t1">
+      <h2><span class="num">第1条</span> 適用</h2>
+      <p>本規約は、合同会社Tonality（以下「当社」）が提供する楽譜・コード譜ビューアアプリ「ScoreLens」（以下「本アプリ」）の利用条件を定めるものです。利用者は、本アプリをダウンロードまたは利用することにより、本規約に同意したものとみなされます。</p>
+    </section>
+
+    <section class="article" id="t2">
+      <h2><span class="num">第2条</span> サービスの内容</h2>
+      <p>本アプリは、楽譜・コード譜の閲覧、書き込み、コード譜の作成・編集、楽譜のスキャン取り込み、伴奏・メトロノーム再生、演奏の録音、セットリストの作成・管理、外部音源／YouTube動画の紐づけ、クラウドストレージ連携、およびこれらに付随する機能を提供する、音楽演奏・練習支援アプリケーションです。機能の詳細は、アプリ内のマニュアル・案内をご参照ください。</p>
+    </section>
+
+    <section class="article" id="t3">
+      <h2><span class="num">第3条</span> 利用資格・アカウント</h2>
+      <p>本アプリは、会員登録なしでご利用いただけます。本アプリ内のデータは、原則としてお使いの端末内に保存されます。</p>
+      <p>本アプリの利用に年齢制限は設けていませんが、未成年者が利用される場合は保護者の同意を得た上でご利用ください。特に、有料プランのご購入には保護者の同意が必要です。</p>
+    </section>
+
+    <section class="article" id="t4">
+      <h2><span class="num">第4条</span> 禁止事項</h2>
+      <p>利用者は、本アプリの利用にあたり、以下の行為をしてはなりません。</p>
+      <ol class="plain">
+        <li>法令または公序良俗に違反する行為</li>
+        <li>第三者の著作権、商標権その他の知的財産権を侵害する行為（他者が権利を有する楽譜・音源等を、権利者の許諾なく複製・スキャン・共有・頒布する行為を含みますが、これに限りません）</li>
+        <li>本アプリのソースコードを逆コンパイル、逆アセンブル、リバースエンジニアリングする行為</li>
+        <li>本アプリの運営を妨害するおそれのある行為</li>
+        <li>他の利用者または第三者に不利益、損害、不快感を与える行為</li>
+        <li>その他、当社が不適切と判断する行為</li>
+      </ol>
+      <div class="callout">本アプリの楽譜スキャン・書き込み・共有機能は、利用者ご自身が正当な権利を有する楽曲・楽譜の練習・演奏準備を目的としたものです。<strong>第三者が著作権を有する楽譜を無断で複製・共有する目的での利用はできません。</strong>取り込んだコンテンツの権利処理は、利用者ご自身の責任において行っていただく必要があります。</div>
+    </section>
+
+    <section class="article" id="t5">
+      <h2><span class="num">第5条</span> 知的財産権</h2>
+      <p>本アプリに関する著作権、商標権その他の知的財産権は、当社または正当な権利を有する第三者に帰属します。</p>
+      <p>利用者が本アプリに取り込んだ楽譜画像、コード譜データ、録音データ等の著作権その他の権利は、当該コンテンツの正当な権利者に帰属し、当社に移転するものではありません。</p>
+    </section>
+
+    <section class="article" id="t6">
+      <h2><span class="num">第6条</span> 利用料金・課金プラン</h2>
+      <p>本アプリは基本無料でご利用いただけますが、一部機能は以下の有料プラン（App内課金）へのアップグレードによりご利用いただけます。</p>
+      <div class="scroller">
+        <table class="perm">
+          <thead><tr><th>プラン</th><th>価格</th><th>種別</th></tr></thead>
+          <tbody>
+            <tr><td class="k">Free</td><td>無料</td><td>—</td></tr>
+            <tr><td class="k">Lite</td><td>¥800</td><td>買い切り（非消耗型）</td></tr>
+            <tr><td class="k">Basic</td><td>¥1,500</td><td>買い切り（非消耗型）</td></tr>
+            <tr><td class="k">Pro</td><td>年額¥1,800／月額¥300／買い切り¥4,000</td><td>自動更新サブスクリプション、または買い切り</td></tr>
+            <tr><td class="k">Studio</td><td>+¥1,800（Pro加入が前提）</td><td>買い切り（非消耗型）／Proへのアドオン</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>各プランで利用可能な機能の詳細は、アプリ内の「プラン」画面をご参照ください。</p>
+      <p>Pro（年額・月額）は自動更新サブスクリプションです。購入手続きが完了すると、選択した期間ごとに自動的に更新され、料金が請求されます。自動更新は、現在の期間が終了する24時間前までに、お使いの端末の設定（Apple ID）からいつでも解除できます。解除しない限り、更新料金が自動的に請求されます。</p>
+      <p>お支払いは、Apple社のApp Store決済システムを通じて処理されます。購入・返金・キャンセルに関する取り扱いは、Appleのメディアサービス利用規約に従います。当社は、Appleの決済システムを経由しない返金には対応できません。</p>
+      <p>機種変更・再インストール等で購入情報が失われた場合は、アプリ内の「購入を復元」機能により、以前の購入内容を復元できます。</p>
+    </section>
+
+    <section class="article" id="t7">
+      <h2><span class="num">第7条</span> お試し期間</h2>
+      <p>本アプリは、初回起動日から30日間、Freeプランの各種制限（登録曲数の上限、ブランドロゴの表示等）を適用せず、全機能をお試しいただけます。これはアプリ内で完結する期間限定の機能開放であり、App Store側の無料トライアル機能とは異なります。お試し期間の終了後は、Freeプランの制限が適用されます。</p>
+    </section>
+
+    <section class="article" id="t8">
+      <h2><span class="num">第8条</span> 外部サービス連携</h2>
+      <p>本アプリは、利用者の選択により、Dropbox・Google Drive・OneDriveなどの外部クラウドストレージサービスや、YouTube（公式IFrame Player API経由）と連携する機能を提供します。これらの外部サービスの利用にあたっては、各サービスの利用規約が適用されます。当社は、これらの外部サービス自体の内容、可用性について保証するものではありません。</p>
+    </section>
+
+    <section class="article" id="t9">
+      <h2><span class="num">第9条</span> サービスの変更・中断・終了</h2>
+      <p>当社は、利用者への事前の通知なく、本アプリの内容を変更、追加、または提供を中断・終了することがあります。これにより生じた利用者の損害について、当社は責任を負いません。</p>
+    </section>
+
+    <section class="article" id="t10">
+      <h2><span class="num">第10条</span> 免責事項</h2>
+      <p>当社は、本アプリに事実上または法律上の瑕疵（安全性、信頼性、正確性、完全性、有効性、特定目的への適合性等に関する欠陥、エラーやバグ、権利侵害等を含みます）がないことを明示的にも黙示的にも保証しません。</p>
+      <p>本アプリの利用によって生じた利用者または第三者の損害について、当社は、当社の故意または重過失による場合を除き、一切の責任を負いません。</p>
+      <p>本アプリの楽譜スキャン・書き込み・共有等の各機能を利用して利用者が行った行為（第三者の著作権を侵害する行為を含みます）について、当社は一切の責任を負わず、当該行為に起因する紛争等については、利用者の責任と費用において解決するものとします。</p>
+    </section>
+
+    <section class="article" id="t11">
+      <h2><span class="num">第11条</span> 本規約の変更</h2>
+      <p>当社は、必要と判断した場合には、利用者への事前の通知なく本規約を変更できるものとします。変更後の規約は、本ページに掲載された時点から効力を生じるものとします。</p>
+    </section>
+
+    <section class="article" id="t12">
+      <h2><span class="num">第12条</span> 準拠法・管轄裁判所</h2>
+      <p>本規約の解釈にあたっては、日本法を準拠法とします。本アプリに関して紛争が生じた場合には、当社所在地を管轄する裁判所を専属的合意管轄とします。</p>
+    </section>
+
+    <section class="article" id="t13">
+      <h2><span class="num">第13条</span> お問い合わせ窓口</h2>
+      <p>本規約に関するお問い合わせは、以下までご連絡ください。</p>
+    </section>
+  </main>
+
+  <footer>
+    <p class="company">合同会社Tonality（Tonality, Limited Liability Company）</p>
+    <address>
+      〒470-0126　愛知県日進市赤池町皆納手2-754<br>
+      お問い合わせ：<a href="mailto:tonality.nisshin@gmail.com">tonality.nisshin@gmail.com</a><br>
+      プライバシーポリシーは<a href="privacy.html">こちら</a>
+    </address>
+  </footer>
+</div>
+</body>
+</html>
