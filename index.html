@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="整体、各種サロン、各種教室のための店舗管理システム">
     <meta name="description" content="整体、各種サロン、各種教室のための店舗管理システムならOp+cent（オプセント）！">
-    <title>Op+cent | AI搭載 オーダーメイド店舗管理システム</title>
+    <title>Tonality | 店舗管理システム Op+cent・アプリ開発</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="shortcut icon" href="favicon.svg">
     <!-- Tailwind CSS -->
@@ -15,15 +15,13 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            DEFAULT: '#1e3a8a', // blue-900 (信頼感のネイビー)
-                            light: '#eff6ff',   // blue-50
-                            dark: '#172554',    // blue-950
-                        },
-                        accent: {
-                            DEFAULT: '#f97316', // orange-500 (コンバージョンのオレンジ)
-                            hover: '#ea580c',   // orange-600
-                        }
+                        brand: { DEFAULT: '#3B3936', light: '#EBE7DD', dark: '#2E2C29' }, // 墨色・生成り
+                        accent: { DEFAULT: '#D2481F', hover: '#B23A16' },                // 朱色（アプリと同じ）
+                        gray: { 50:'#F7F4EC', 100:'#EBE7DD', 200:'#DDD7C9', 300:'#CFC9BC', 400:'#A8A294', 500:'#8C877D', 600:'#6E6A61', 700:'#55524B', 800:'#3B3936', 900:'#2E2C29' },
+                        teal: { 600:'#8C6F4E', 700:'#6F5639' },
+                        orange: { 50:'#F6E7E0', 200:'#E6C3B5', 500:'#D2481F', 600:'#B23A16' },
+                        amber: { 100:'#F1E4CF', 700:'#8A5A1E' },
+                        green: { 100:'#E6EADB', 700:'#5C6B3A' }
                     },
                     fontFamily: {
                         sans: ['"Noto Sans JP"', '"Hiragino Kaku Gothic ProN"', 'Meiryo', 'sans-serif'],
@@ -37,13 +35,30 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans JP', sans-serif; }
-        .hero-bg {
-            background: linear-gradient(135deg, #172554 0%, #1e3a8a 100%);
-        }
-        .ai-bg {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        }
+        /* オーガニックUI（アプリと同じ：生成りの紙・細い線・朱色） */
+        body { font-family: 'Noto Sans JP', sans-serif; background:#F3F0E9; color:#3B3936; }
+        .hero-bg { background:#EBE7DD; border-bottom:1px solid #CFC9BC; }
+        .ai-bg { background:#3B3936; }
+        .bg-white { background-color:#FBFAF6 !important; }
+        .font-black { font-weight:700; }
+        .shadow-md,.shadow-lg,.shadow-xl,.shadow-sm,.shadow { box-shadow:none !important; }
+        header.fixed { background:#F3F0E9 !important; border-bottom:1px solid #CFC9BC; }
+        .rounded-2xl { border-radius:14px; }
+        .rounded-xl { border-radius:12px; }
+        .rounded-2xl.bg-white, .rounded-xl.bg-white { border:1px solid #CFC9BC; }
+        .border-b-4 { border-bottom-width:2px; }
+        .border-t-4 { border-top-width:2px; }
+        /* ボタン：丸薬ではなく、角を少し丸めた四角 */
+        a.bg-accent.rounded-full, button.bg-accent { border-radius:12px; }
+        .bg-accent { box-shadow:inset 0 -2px 0 rgba(0,0,0,.12); }
+        /* 丸い大きなアイコン：紙色の面に、細い線と朱色 */
+        .w-20.h-20.rounded-full { background:#FBFAF6 !important; color:#D2481F !important; border:1px solid #CFC9BC; }
+        /* 暗い面の中の半透明パネル：細い線 */
+        .bg-white\/10 { background-color:rgba(251,250,246,.08); border-color:rgba(251,250,246,.25) !important; backdrop-filter:none !important; }
+        /* 明るいヒーロー内のパネル */
+        .hero-bg .panel-paper { background:#FBFAF6; border:1px solid #CFC9BC; }
+        .hero-bg .panel-paper:hover { background:#F7F4EC; }
+        input, textarea { border-radius:10px !important; }
     </style>
 </head>
 <body class="text-gray-800 antialiased bg-white">
@@ -52,27 +67,108 @@
     <header class="fixed w-full bg-white shadow-md z-50">
         <div class="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-layer-group text-brand text-2xl"></i>
-                <span class="text-2xl font-bold text-brand tracking-tight">Op<span class="text-accent">+</span>cent</span>
+                <i class="fa-solid fa-music text-brand text-2xl"></i>
+                <span class="text-2xl font-bold text-brand tracking-tight">Tonality</span>
             </div>
             <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-                <a href="#troubles" class="text-gray-600 hover:text-brand transition">お悩み</a>
-                <a href="#features" class="text-gray-600 hover:text-brand transition">選ばれる理由</a>
-                <a href="#ai" class="text-gray-600 hover:text-brand transition">AI機能</a>
-                <a href="#price" class="text-gray-600 hover:text-brand transition">料金プラン</a>
+                <a href="#business" class="text-gray-600 hover:text-brand transition">事業紹介</a>
+                <a href="#apps" class="text-gray-600 hover:text-brand transition">アプリ開発</a>
+                <a href="#opcent" class="text-gray-600 hover:text-brand transition">Op+cent</a>
+                <a href="#price" class="text-gray-600 hover:text-brand transition">Op+cent 料金</a>
+                <a href="#company" class="text-gray-600 hover:text-brand transition">会社概要</a>
             </div>
             <div>
                 <a href="#contact" class="bg-accent hover:bg-accent-hover text-white font-bold py-2 px-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5">
-                    無料相談はこちら
+                    お問い合わせ
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- 1. ヒーローセクション / キャッチコピー -->
-    <section class="hero-bg min-h-[90vh] flex items-center pt-28 pb-16">
+    <!-- 0. 会社のトップ：2つの事業 -->
+    <section id="business" class="hero-bg pt-32 pb-20">
         <div class="container mx-auto px-4 lg:px-8">
-            <div class="max-w-4xl mx-auto text-center text-white">
+            <div class="max-w-4xl mx-auto text-center text-brand mb-12">
+                <p class="text-sm tracking-widest opacity-80 mb-4">TONALITY LLC</p>
+                <h1 class="text-3xl md:text-5xl font-black leading-tight mb-6">現場から生まれた、<br><span class="text-accent">仕組み</span>と<span class="text-accent">アプリ</span>をつくる。</h1>
+                <p class="text-lg md:text-xl font-medium opacity-90 leading-relaxed">合同会社Tonality は、店舗・教室の運営と、音楽の現場に、長く関わってきた経営者が、<br class="hidden md:block">自分たちの現場で本当に使えるものを、形にしています。</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <a href="#opcent" class="block panel-paper rounded-2xl p-8 text-brand transition">
+                    <div class="text-accent text-3xl mb-4"><i class="fa-solid fa-layer-group"></i></div>
+                    <h2 class="text-2xl font-bold mb-2">店舗管理システム Op+cent</h2>
+                    <p class="opacity-90 leading-relaxed mb-4">予約・顧客・スタッフ管理、入会手続きを、ひとつに。AI 搭載で、オーダーメイドの店舗管理システムです。</p>
+                    <span class="font-bold">詳しく見る <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                </a>
+                <a href="#apps" class="block panel-paper rounded-2xl p-8 text-brand transition">
+                    <div class="text-accent text-3xl mb-4"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <h2 class="text-2xl font-bold mb-2">アプリ開発</h2>
+                    <p class="opacity-90 leading-relaxed mb-4">音楽教室とミュージシャンが監修した、練習のためのアプリを、企画・開発・配信しています（iPhone・iPad）。</p>
+                    <span class="font-bold">アプリを見る <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 0-2. アプリ開発 -->
+    <section id="apps" class="py-20 bg-gray-50 border-b border-gray-200">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand mb-4"><span class="inline-block border-b-4 border-accent pb-2">アプリ開発</span></h2>
+                <p class="text-gray-600 leading-relaxed">音楽教室とミュージシャンが監修した、練習のためのアプリです。<br class="hidden md:block">どのアプリも、広告なし。端末の中で、動きます。</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                    <img src="apps/icons/sheetdeck.png" alt="SheetDeck 楽譜ビューアのアイコン" width="96" height="96" class="w-24 h-24 rounded-2xl shadow mb-4" loading="lazy">
+                    <span class="inline-block text-xs font-bold text-green-700 bg-green-100 rounded-full px-3 py-1 mb-2">公開中</span>
+                    <h3 class="text-lg font-bold text-brand mb-2">SheetDeck 楽譜ビューア</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-5 flex-1">楽譜・コード譜の表示、書き込み、自動の譜めくり。練習から本番まで、1台で。</p>
+                    <a href="https://apps.apple.com/jp/app/sheetdeck-%E6%A5%BD%E8%AD%9C%E3%83%93%E3%83%A5%E3%83%BC%E3%82%A2-%E6%9B%B8%E3%81%8D%E8%BE%BC%E3%81%BF-%E8%AD%9C%E3%82%81%E3%81%8F%E3%82%8A/id6808550320" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white text-sm font-bold py-2 px-5 rounded-full transition"><i class="fa-brands fa-app-store-ios"></i>App Store で見る</a>
+                        <div class="mt-3 text-xs text-gray-500"><a href="sheetdeck/support.html" class="hover:underline">サポート</a>　<a href="sheetdeck/privacy.html" class="hover:underline">プライバシーポリシー</a></div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                    <img src="apps/icons/hakubeat.png" alt="Hakubeat メトロノームのアイコン" width="96" height="96" class="w-24 h-24 rounded-2xl shadow mb-4" loading="lazy">
+                    <span class="inline-block text-xs font-bold text-green-700 bg-green-100 rounded-full px-3 py-1 mb-2">公開中</span>
+                    <h3 class="text-lg font-bold text-brand mb-2">Hakubeat メトロノーム</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-5 flex-1">23種類のリズムと、2拍3連に対応。クリックの裏を叩く「裏打ちテスト」つき。</p>
+                    <a href="https://apps.apple.com/jp/app/hakubeat-%E3%83%A1%E3%83%88%E3%83%AD%E3%83%8E%E3%83%BC%E3%83%A0-%E3%83%AA%E3%82%BA%E3%83%A0%E3%83%88%E3%83%AC%E3%83%BC%E3%83%8B%E3%83%B3%E3%82%B0/id6825347280" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-brand hover:bg-brand-dark text-white text-sm font-bold py-2 px-5 rounded-full transition"><i class="fa-brands fa-app-store-ios"></i>App Store で見る</a>
+                        <div class="mt-3 text-xs text-gray-500"><a href="hakubeat/support.html" class="hover:underline">サポート</a>　<a href="hakubeat/privacy.html" class="hover:underline">プライバシーポリシー</a></div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                    <img src="apps/icons/pitapeg.png" alt="PitaPeg チューナーのアイコン" width="96" height="96" class="w-24 h-24 rounded-2xl shadow mb-4" loading="lazy">
+                    <span class="inline-block text-xs font-bold text-amber-700 bg-amber-100 rounded-full px-3 py-1 mb-2">準備中</span>
+                    <h3 class="text-lg font-bold text-brand mb-2">PitaPeg チューナー</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-5 flex-1">ギター・ベース・ウクレレに対応。初心者モードが、1本ずつ案内します。</p>
+                    <span class="inline-block text-sm font-bold text-gray-500 bg-gray-100 rounded-full px-5 py-2">準備中</span>
+                </div>
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                    <img src="apps/icons/ototori.png" alt="ototori ボイトレのアイコン" width="96" height="96" class="w-24 h-24 rounded-2xl shadow mb-4" loading="lazy">
+                    <span class="inline-block text-xs font-bold text-amber-700 bg-amber-100 rounded-full px-3 py-1 mb-2">準備中</span>
+                    <h3 class="text-lg font-bold text-brand mb-2">ototori ボイトレ</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-5 flex-1">歌う声の音程が、目で見えます。音域を測って、歌の練習へ。</p>
+                    <span class="inline-block text-sm font-bold text-gray-500 bg-gray-100 rounded-full px-5 py-2">準備中</span>
+                </div>
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-1rem)]">
+                    <img src="apps/icons/otowake.png" alt="Otowakeのアイコン" width="96" height="96" class="w-24 h-24 rounded-2xl shadow mb-4" loading="lazy">
+                    <span class="inline-block text-xs font-bold text-amber-700 bg-amber-100 rounded-full px-3 py-1 mb-2">準備中</span>
+                    <h3 class="text-lg font-bold text-brand mb-2">Otowake プレーヤー</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-5 flex-1">マイナスワンプレーヤー。持っている曲を、ボーカル・ドラム・ベース・その他に分けて、聴いたり消したり。</p>
+                    <span class="inline-block text-sm font-bold text-gray-500 bg-gray-100 rounded-full px-5 py-2">準備中</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Op+cent の見出し -->
+    <div id="opcent" class="bg-brand-dark text-white text-center py-6">
+        <p class="text-sm tracking-widest opacity-70">BUSINESS 01</p>
+        <p class="text-2xl font-bold">店舗管理システム <span>Op<span class="text-accent">+</span>cent</span></p>
+    </div>
+
+    <!-- 1. ヒーローセクション / キャッチコピー -->
+    <section class="hero-bg min-h-[70vh] flex items-center pt-20 pb-16">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="max-w-4xl mx-auto text-center text-brand">
 <h1 class="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-6">
                     店舗経営の<span class="text-accent">「事務作業」</span>をゼロへ。
                 </h1>
@@ -80,7 +176,7 @@
                     現場から生まれた、AI搭載のオーダーメイド店舗管理システム『Op+cent』
                 </p>
 
-                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 md:p-8 mb-10 text-left md:text-center border border-white/20">
+                <div class="panel-paper rounded-xl p-6 md:p-8 mb-10 text-left md:text-center">
                     <p class="text-lg md:text-xl font-medium leading-relaxed">
                         Optimize（最適化）× Centralization（一元化）。<br class="hidden md:block">
                         予約・顧客・スタッフ管理、煩雑な入会手続きをひとつのシステムに。<br>
@@ -678,10 +774,10 @@
                 <!-- 会社情報 -->
                 <div>
                     <div class="flex items-center gap-2 mb-6">
-                        <i class="fa-solid fa-layer-group text-2xl text-accent"></i>
-                        <span class="text-3xl font-bold tracking-tight">Op<span class="text-accent">+</span>cent</span>
+                        <i class="fa-solid fa-music text-2xl text-accent"></i>
+                        <span class="text-3xl font-bold tracking-tight">Tonality</span>
                     </div>
-                    <h4 class="font-bold mb-4 text-lg border-b border-white/20 pb-2 inline-block">運営会社情報</h4>
+                    <h4 id="company" class="font-bold mb-4 text-lg border-b border-white/20 pb-2 inline-block">会社概要</h4>
                     <table class="w-full text-sm opacity-80">
                         <tbody>
                             <tr class="border-b border-white/10">
@@ -691,6 +787,10 @@
                             <tr class="border-b border-white/10">
                                 <th class="py-3 text-left font-normal">代表社員</th>
                                 <td class="py-3">戸城 孝啓</td>
+                            </tr>
+                            <tr class="border-b border-white/10">
+                                <th class="py-3 text-left font-normal align-top">事業内容</th>
+                                <td class="py-3">店舗管理システム『Op+cent』の開発・提供<br>スマートフォンアプリ（iPhone・iPad）の企画・開発・配信</td>
                             </tr>
                             <tr>
                                 <th class="py-3 text-left font-normal align-top">所在地</th>
@@ -702,7 +802,7 @@
 
                 <!-- お問い合わせフォーム -->
                 <div class="bg-white/5 p-6 rounded-xl">
-                    <h4 class="font-bold mb-6 text-xl text-center">導入のご相談・お問い合わせ</h4>
+                    <h4 class="font-bold mb-6 text-xl text-center">お問い合わせ（Op+cent の導入のご相談・アプリのご質問）</h4>
                     <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
                         <input type="hidden" name="access_key" value="ed4be9ea-d3c4-4472-b517-2ffc0076a513">
                         <input type="hidden" name="subject" value="【Op+cent】LPからのお問い合わせ">
