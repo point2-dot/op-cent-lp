@@ -198,7 +198,7 @@
     }).join('');
     return '<section class="card"><div class="row between"><h2 style="margin:0">全スタッフの状況</h2><div class="row noprint"><button class="btn" data-act="csv-list">CSV出力（Excelで開けます）</button><button class="btn" data-act="print">印刷</button></div></div>' +
       '<p class="hint">色の意味：<span class="tag danger">赤</span>失効30日以内・義務の期限30日以内　<span class="tag warn">黄</span>要注意（残5日未満・義務の期限90日以内など）　<span class="tag ok">緑</span>達成</p></section>' +
-      alerts + '<section class="card">' + searchBar() + '<div class="tablewrap" style="margin-top:.6rem"><table><thead>' + head + '</thead><tbody>' + (trs || '<tr><td colspan="6" class="muted">該当するスタッフがいません。「スタッフ」から登録してください。</td></tr>') + '</tbody></table></div></section>';
+      alerts + '<section class="card">' + searchBar() + '<div class="tablewrap" style="margin-top:.6rem"><table><thead>' + head + '</thead><tbody>' + (trs || '<tr><td colspan="6" class="muted">該当するスタッフがいません。「スタッフ」から登録してください。はじめての方は <a href="#" data-act="nav" data-view="settings">設定・バックアップ</a> の一番上にある取扱説明書をご覧ください。</td></tr>') + '</tbody></table></div></section>';
   }
 
   // ---------- 取得入力 ----------
@@ -455,11 +455,65 @@
       (rows.map((r) => '<tr><td class="nowrap">' + esc(new Date(r.at).toLocaleString('ja-JP')) + '</td><td>' + esc(r.who) + '</td><td>' + esc(r.staffName) + '</td><td>' + esc(r.action) + '</td><td>' + esc(r.detail) + '</td></tr>').join('') || '<tr><td colspan="5" class="muted">履歴はありません</td></tr>') + '</tbody></table></div></section>';
   }
 
+  // ---------- 取扱説明書 ----------
+  function manualHTML() {
+    const d = (title, body, open) => '<details' + (open ? ' open' : '') + '><summary>' + title + '</summary><div class="manual-body">' + body + '</div></details>';
+    return '<section class="card manual"><h2>取扱説明書（はじめての方へ）</h2>' +
+      '<p>このアプリは、スタッフ全員の有給休暇を「いつ付与されて、いつ使って、いつ消えるか」まで自動で計算します。<strong>入力するのは、スタッフの情報と、有給を取った日だけ</strong>です。気になる項目をタップすると開きます。</p>' +
+      d('① 使い始めの流れ（まずここから）',
+        '<ol><li>上のメニュー「<strong>スタッフ</strong>」→「＋新しく登録」で、スタッフの情報を入れて保存します。</li>' +
+        '<li>保存すると、付与日が来ている分の有給が<strong>自動で付与</strong>されます（何もしなくて大丈夫です）。</li>' +
+        '<li>有給を取った（取る）ときは、メニュー「<strong>取得入力</strong>」で、スタッフ・日付・区分を選んで保存します。</li>' +
+        '<li>メニュー「<strong>一覧</strong>」で、全員の残り日数・失効・年5日の状況を確認します。</li>' +
+        '<li>ときどき、下の「バックアップ」でデータをファイルに保存します。</li></ol>', true) +
+      d('② スタッフの登録のしかた',
+        '<ul><li><strong>入社日</strong>：実際に入社した日です。</li>' +
+        '<li><strong>有給初回付与日</strong>：最初に有給を付与する日です。ふつうは入社日の6か月後なので、「入社日＋6か月を入れる」ボタンを押せば入ります。会社で付与日をそろえている（例：毎年4月1日）ときは、その日を入れます。以後は1年ごとに自動で付与されます。</li>' +
+        '<li><strong>勤務条件</strong>：付与される日数を決める大事な欄です。<br>・正社員やフルタイム：週5日・週40時間などを入れます。<br>・パート：<strong>週所定労働日数</strong>（週に何日働くか）と<strong>週所定労働時間</strong>を入れます。日数の決まりが週ごとにバラバラな場合は「年間所定労働日数」を入れます。<br>・週30時間以上、または週5日以上なら「通常」の日数、それより少ない人は、働く日数に応じて自動で「比例」した日数になります。</li>' +
+        '<li><strong>1日の所定労働時間</strong>：時間単位で有給を取るときの「1日分」の計算に使います。「開始・終了・休憩から計算」ボタンで入ります。</li>' +
+        '<li><strong>勤務日数や時間が変わったとき</strong>：「情報を編集」で数字を直し、<strong>「条件の変更日」</strong>を入れて保存します。昔の条件は履歴に残り、過去の付与は変わりません。</li>' +
+        '<li><strong>休職・退職</strong>：在籍状況を変えます。退職の場合は退職日も入れます。退職した人の記録も消えずに残ります（一覧で「退職者」を選ぶと見られます）。</li></ul>') +
+      d('③ 有給を取ったとき（取得入力）',
+        '<ol><li>スタッフ名を選ぶ。</li><li>取得日を選ぶ。</li><li>区分を選ぶ。<br>・<strong>1日</strong>：丸1日休み（1日分）<br>・<strong>午前半休／午後半休</strong>：半日休み（0.5日分）<br>・<strong>時間単位</strong>：1時間単位。「1時間」「2時間」のように整数で入れます（30分単位はできません）。</li><li>「保存」を押すと、残りの日数が自動で更新されます。</li></ol>' +
+        '<p class="hint">時間単位は、年に5日分までです（会社が「労使協定」を結んでいる場合のみ）。協定がない場合は、下の「ルールの設定」でチェックを外してください。<br>残りが足りないときや、同じ日に二重で入れたときは、保存できずに理由が出ます。</p>') +
+      d('④ 入力を間違えたとき',
+        '<ul><li>スタッフの画面（一覧から名前を押す）→「取得履歴」で、間違えた行の<strong>「修正」</strong>または<strong>「取消」</strong>を押します。</li>' +
+        '<li>「修正」：日付や区分を直して保存し直します。「取消」：その取得をなかったことにして、残りを元に戻します。</li>' +
+        '<li>どちらも、<strong>元の記録は消えずに残り</strong>、「修正履歴」に「いつ・何を」変えたかが記録されます。</li></ul>') +
+      d('⑤ 画面の見方',
+        '<ul><li><strong>残有給</strong>：いま使える日数です。「7日3時間」のように、日と時間で出ます。</li>' +
+        '<li><strong>次回付与日</strong>：次に有給が増える日と、増える日数の見込みです。</li>' +
+        '<li><strong>失効予定</strong>：使わないと消えてしまう日数と日付です。有給は付与から<strong>2年</strong>で時効になります。<span class="tag danger">赤</span>は30日以内に消えます。</li>' +
+        '<li><strong>年5日義務</strong>：年10日以上もらう人は、会社が年5日は取らせる義務があります。「残2日」のように不足が出て、期限が近いと<span class="tag warn">黄</span>・<span class="tag danger">赤</span>になります。1日は1日、半休は0.5日として数え、<strong>時間単位は数えません</strong>。</li>' +
+        '<li>有給は、<strong>古い付与分から先に使われます</strong>（消えるのが早いものから減ります）。</li></ul>') +
+      d('⑥ 出勤率（8割）と付与の「保留」',
+        '<p>有給は、直前1年間の出勤率が8割以上の人に付与されます。スタッフの画面の「出勤率」から、<strong>全労働日</strong>（出勤すべき日）・<strong>出勤日数</strong>・<strong>みなし出勤日数</strong>を入れます。</p>' +
+        '<ul><li>みなし出勤：産前産後休業・育児休業・介護休業・仕事中のけがによる休み・<strong>有給を取った日</strong>は、出勤したものとして数えます。</li>' +
+        '<li>8割未満になると、その回の付与は自動で<strong>「保留」</strong>になります。会社の判断で付与する場合は、「付与履歴」の「付与する」を押します。</li>' +
+        '<li>入力しなかったときは、8割以上とみなして付与されます。</li></ul>') +
+      d('⑦ 管理者以外が勝手に変更できないようにする',
+        '<p>下の「管理者パスワード」を設定すると、パスワードを入れた人（管理者）だけが入力・変更できます。それ以外の人は、見るだけになります。右上の「管理者ログイン」から入ります。パスワードは忘れないようにしてください。</p>') +
+      d('⑧ データの保存とバックアップ（大切です）',
+        '<ul><li>データは、<strong>いま使っているこの端末のブラウザの中</strong>に保存されます。<strong>別のスマホやパソコンでは、同じデータは出ません。</strong></li>' +
+        '<li>ブラウザの履歴やデータを消すと、有給のデータも消えます。下の「バックアップを保存」で、ときどきファイルに保存してください（月に1回くらいがおすすめ）。</li>' +
+        '<li>消えたときや端末を替えたときは、「バックアップから戻す」でそのファイルを選ぶと元に戻ります。</li>' +
+        '<li>「一覧」の「CSV出力」はExcelで開けます。スタッフの画面の「印刷用の台帳」は、紙に出力できます。</li></ul>') +
+      d('⑨ 言葉の説明',
+        '<ul><li><strong>付与</strong>：有給が新しく増えること。</li><li><strong>繰越</strong>：前の年に使わず残った分。</li><li><strong>失効</strong>：付与から2年たって、使えなくなること。</li>' +
+        '<li><strong>比例付与</strong>：週の勤務日数が少ない人に、日数に応じて付与する決まり。</li><li><strong>時間単位年休</strong>：1時間単位で取る有給。</li><li><strong>基準日</strong>：有給が付与される日。</li></ul>') +
+      d('⑩ こんなときは？',
+        '<ul><li><strong>入力できない（ボタンが押せない）</strong>：管理者パスワードが設定されている場合は、右上の「管理者ログイン」から入ってください。</li>' +
+        '<li><strong>データが空になった</strong>：別の端末やブラウザで開いていないか確認してください。バックアップがあれば戻せます。</li>' +
+        '<li><strong>付与日数が思っていたのと違う</strong>：スタッフの画面の「付与履歴」の右端に、計算の根拠（勤続期間・通常か比例か）が出ます。勤務条件が合っているか確認してください。</li>' +
+        '<li><strong>法律の数字について</strong>：このアプリは、労働基準法の付与日数・2年の時効・年5日義務などに沿って計算しますが、個別の判断が必要な場合は、社会保険労務士などにご確認ください。</li></ul>') +
+      '</section>';
+  }
+
   // ---------- 設定・バックアップ ----------
   function viewSettings() {
     const st = db.settings;
     const dis = state.isAdmin ? '' : ' disabled';
-    return '<section class="card"><h2>ルールの設定</h2><form id="settingsform" class="grid c2">' +
+    return manualHTML() + '<section class="card"><h2>ルールの設定</h2><form id="settingsform" class="grid c2">' +
       '<label class="f"><span><input type="checkbox" name="hourlyEnabled"' + (st.hourlyEnabled ? ' checked' : '') + dis + '> 時間単位年休を認める（労使協定を結んでいる）</span></label>' +
       field('時間単位年休の年間上限（日分）', 'hourCapDays', st.hourCapDays, 'number', 'min="0" max="5" step="1"' + dis) +
       field('失効の何日前に知らせるか', 'expiryWarnDays', st.expiryWarnDays, 'number', 'min="1"' + dis) +

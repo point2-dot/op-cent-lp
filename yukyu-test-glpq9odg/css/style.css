@@ -116,3 +116,11 @@ dialog.dlg h2 { margin-top: 0; }
   th { background: #eee !important; -webkit-print-color-adjust: exact; }
   td.cell-ok, td.cell-warn, td.cell-danger { background: none; color: #000; font-weight: 600; }
 }
+
+/* 取扱説明書 */
+.manual details { border: 1px solid var(--line); border-radius: 8px; margin-bottom: .5rem; background: #fff; }
+.manual summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; }
+.manual details[open] summary { border-bottom: 1px solid var(--line); background: var(--accent-bg); }
+.manual-body { padding: .6rem .9rem .8rem; }
+.manual-body ul, .manual-body ol { padding-left: 1.3rem; margin: .3rem 0; }
+.manual-body li { margin-bottom: .4rem; }
