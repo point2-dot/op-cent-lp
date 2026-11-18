@@ -48,6 +48,8 @@
 
   // ---------- 状態 ----------
   const state = {
+    mode: qs.get('mode') === 'staff' || (!qs.get('mode') && localStorage.getItem('yukyu_mode') === 'staff') ? 'staff' : 'admin',
+    me: localStorage.getItem('yukyu_me') || '',
     view: 'list', id: null, tab: 'summary', q: '', filter: 'active', isAdmin: !db.settings.adminHash,
     entry: { staffId: '', date: TODAY, kind: 'day', hours: '', note: '', editId: null }, entryError: '',
   };
@@ -125,6 +127,12 @@
   function render() {
     analysisCache.clear();
     const app = document.getElementById('app');
+    if (state.mode === 'staff') {
+      let sb = '';
+      try { sb = viewStaffSelf(); } catch (e) { console.error(e); sb = '<section class="card"><p class="form-err">画面の表示でエラーが出ました：' + esc(e.message) + '</p></section>'; }
+      app.innerHTML = '<header class="top"><h1>有給休暇（スタッフ用）</h1><div class="who"><span>' + fd(TODAY) + ' 現在</span><button class="btn" data-act="mode-admin">管理者画面へ</button></div></header><main>' + (loadError ? '<p class="alert danger">' + esc(loadError) + '</p>' : '') + sb + '</main>';
+      return;
+    }
     const navOn = state.view === 'detail' || state.view === 'form' || state.view === 'ledger' ? 'staff' : state.view;
     let body = '';
     try {
@@ -133,7 +141,7 @@
     const who = db.settings.adminHash
       ? (state.isAdmin ? '<span class="tag ok">管理者</span><button class="btn" data-act="logout">ログアウト</button>' : '<span class="tag">閲覧のみ</span><button class="btn" data-act="login">管理者ログイン</button>')
       : '<span class="tag warn">パスワード未設定</span>';
-    app.innerHTML = '<header class="top"><h1>有給休暇管理</h1><div class="who"><span>' + fd(TODAY) + ' 現在</span>' + who + '</div></header>' +
+    app.innerHTML = '<header class="top"><h1>有給休暇管理</h1><div class="who"><span>' + fd(TODAY) + ' 現在</span>' + who + '<button class="btn" data-act="mode-staff">スタッフ画面を見る</button></div></header>' +
       '<nav class="tabs" aria-label="メニュー">' + NAV.map((n) => '<button data-act="nav" data-view="' + n[0] + '" class="' + (navOn === n[0] ? 'on' : '') + '">' + n[1] + '</button>').join('') + '</nav>' +
       '<main>' + (loadError ? '<p class="alert danger">' + esc(loadError) + '</p>' : '') + body + '</main>';
   }
@@ -455,6 +463,53 @@
       (rows.map((r) => '<tr><td class="nowrap">' + esc(new Date(r.at).toLocaleString('ja-JP')) + '</td><td>' + esc(r.who) + '</td><td>' + esc(r.staffName) + '</td><td>' + esc(r.action) + '</td><td>' + esc(r.detail) + '</td></tr>').join('') || '<tr><td colspan="5" class="muted">履歴はありません</td></tr>') + '</tbody></table></div></section>';
   }
 
+  // ---------- スタッフ用の画面（自分の分を見るだけ） ----------
+  function staffManualHTML() {
+    const d = (t, b, o) => '<details' + (o ? ' open' : '') + '><summary>' + t + '</summary><div class="manual-body">' + b + '</div></details>';
+    return '<section class="card manual"><h2>使い方</h2>' +
+      d('この画面でわかること', '<ul><li>いま使える有給の日数（「7日3時間」のように、日と時間で出ます）</li><li>次にいつ、何日もらえるか</li><li>使わないと消えてしまう分と、その日付</li><li>これまでに取った日の一覧</li></ul><p>この画面は<strong>見るだけ</strong>です。有給を取りたいとき・記録が違うときは、管理者に伝えてください。</p>', true) +
+      d('有給が消えるのはいつ？', '<p>有給は、もらった日から<strong>2年</strong>たつと使えなくなります。「使うと消える分」に、消える日が出ます。古い分から先に使われるので、取るときは自動で古い分から減ります。</p>') +
+      d('「年5日」とは？', '<p>1年に10日以上もらう人は、法律で<strong>年5日は有給を取る</strong>決まりです。画面に「あと◯日」と出たら、期限までに取ってください。1日休みは1日、半休は0.5日として数えます。1時間ごとの有給（時間単位）は、この5日には入りません。</p>') +
+      d('時間単位って？', '<p>1時間ごとに取れる有給です。あなたの「1日分」は、所定労働時間（例：8時間）で数えます。年に5日分までです。</p>') +
+      d('見方がわからないとき', '<p>名前を選び間違えていないか確認してください。数字が違うと思ったら、管理者に聞いてください。</p>') + '</section>';
+  }
+
+  function viewStaffSelf() {
+    const list = activeStaff().sort((a, b) => a.name.localeCompare(b.name, 'ja'));
+    if (!staffById(state.me)) state.me = '';
+    const opts = '<option value="">選んでください</option>' + list.map((x) => '<option value="' + x.id + '"' + (x.id === state.me ? ' selected' : '') + '>' + esc(x.name) + '</option>').join('');
+    const picker = '<section class="card"><label class="f">あなたの名前を選んでください<select data-me="1">' + opts + '</select></label></section>';
+    const s = staffById(state.me);
+    if (!s) return picker + (list.length ? '' : '<section class="card"><p class="muted">まだスタッフが登録されていません。管理者画面から登録してください。</p></section>') + staffManualHTML();
+    const a = analysis(s), H = a.H;
+    const stat = (k, v, cls) => '<div class="stat ' + (cls || '') + '"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>';
+    if (!a.hasGrant) return picker + '<section class="card"><h2>' + esc(s.name) + 'さん</h2><p>まだ有給は付与されていません。最初の付与日は <strong>' + fd(s.firstGrantDate) + '</strong> です。</p></section>' + staffManualHTML();
+
+    let notes = '';
+    if (a.expiringSoon.length) notes += '<div class="alert danger"><strong>もうすぐ消える有給があります</strong><ul>' + a.expiringSoon.map((g) => '<li>' + bal(g.unused, H) + '：' + fd(lastDay(g.expire)) + ' までに使ってください</li>').join('') + '</ul></div>';
+    const o = a.obligation;
+    if (o.state === 'open') notes += '<div class="alert ' + (o.level === 'danger' ? 'danger' : o.level === 'warn' ? 'warn' : 'info') + '"><strong>今年は、あと ' + round1(o.short) + ' 日分、有給を取る必要があります</strong>（' + fd(o.end) + ' まで。いま ' + round1(o.done) + ' 日取得済み）</div>';
+    else if (o.state === 'ok') notes += '<div class="alert info">今年の「年5日」の取得は、達成しています。</div>';
+    if (a.pending.length) notes += '<div class="alert warn">付与の確認中のものがあります。くわしくは管理者に聞いてください。</div>';
+
+    const rp = new Map(Y.replay(s, TODAY).grants.map((g) => [g.id, g]));
+    const gtr = (s.grants || []).filter((g) => g.status === 'granted' && g.date <= TODAY).sort((x, y) => y.date.localeCompare(x.date)).map((g) => {
+      const r = rp.get(g.id);
+      return '<tr><td>' + fd(g.date) + '</td><td>' + g.days + '日</td><td>' + fd(lastDay(Y.expireOf(g))) + 'まで</td><td>' + (r ? bal(r.used, H) : '—') + '</td><td>' + (r && r.expired > 1e-6 ? '消えた ' + bal(r.expired, H) : '<strong>' + (r ? bal(r.remaining, H) : '—') + '</strong>') + '</td></tr>';
+    }).join('');
+    const utr = (s.usages || []).filter((u) => u.status === 'active').sort((x, y) => y.date.localeCompare(x.date)).slice(0, 30).map((u) =>
+      '<tr><td>' + fd(u.date) + (u.date > TODAY ? ' <span class="tag info">予定</span>' : '') + '</td><td>' + Y.KIND_LABEL[u.kind] + (u.kind === 'hour' ? '（' + u.hours + '時間）' : '') + '</td></tr>').join('');
+    return picker + notes +
+      '<section class="card"><h2 style="margin-top:0">' + esc(s.name) + ' さんの有給</h2><div class="stats">' +
+      stat('いま使える有給', bal(a.remaining, H), 'big') + stat('前年からの繰越', bal(a.carry, H)) + stat('今年度にもらった分', a.granted + '日') +
+      stat('取った日数（1日・半日）', round1(a.usedDays) + '日') + stat('取った時間数（時間単位）', a.usedHours + '時間') + stat('消えた日数', bal(a.expiredDays, H)) +
+      stat('次にもらえる日', a.next ? fd(a.next.date) : '—') + stat('次にもらえる日数', a.next ? (a.next.days === null ? '確認中' : a.next.days + '日（見込）') : '—') + '</div>' +
+      (a.expiring ? '<p class="hint">次に消える分：' + bal(a.expiring.days, H) + '（' + fd(lastDay(a.expiring.date)) + ' まで使えます）</p>' : '') + '</section>' +
+      '<section class="card"><h2 style="margin-top:0">もらった有給の内訳</h2><div class="tablewrap"><table><thead><tr><th>もらった日</th><th>日数</th><th>使える期限</th><th>使った分</th><th>残り</th></tr></thead><tbody>' + gtr + '</tbody></table></div></section>' +
+      '<section class="card"><h2 style="margin-top:0">取った日の一覧</h2>' + (utr ? '<div class="tablewrap"><table><thead><tr><th>日付</th><th>区分</th></tr></thead><tbody>' + utr + '</tbody></table></div>' : '<p class="muted">まだ取った記録はありません。</p>') + '</section>' +
+      staffManualHTML();
+  }
+
   // ---------- 取扱説明書 ----------
   function manualHTML() {
     const d = (title, body, open) => '<details' + (open ? ' open' : '') + '><summary>' + title + '</summary><div class="manual-body">' + body + '</div></details>';
@@ -565,6 +620,8 @@
     nav: (el) => { state.q = ''; go(el.dataset.view); },
     open: (el) => go('detail', el.dataset.id, el.dataset.tab || 'summary'),
     tab: (el) => { state.tab = el.dataset.tab; render(); },
+    'mode-staff': () => { state.mode = 'staff'; localStorage.setItem('yukyu_mode', 'staff'); render(); window.scrollTo(0, 0); },
+    'mode-admin': () => { state.mode = 'admin'; localStorage.setItem('yukyu_mode', 'admin'); render(); window.scrollTo(0, 0); },
     login, logout: () => { state.isAdmin = false; render(); },
     print: () => window.print(),
     'csv-list': csvList, 'csv-usage': csvUsage,
@@ -762,6 +819,7 @@
   document.addEventListener('change', (ev) => {
     const el = ev.target;
     if (el.dataset.live) return;
+    if (el.dataset.me) { state.me = el.value; localStorage.setItem('yukyu_me', el.value); render(); return; }
     if (el.dataset.entry) { state.entry[el.dataset.entry] = el.value; state.entryError = ''; if (!el.dataset.nore) render(); }
     if (el.id === 'restorefile' && el.files[0]) {
       const file = el.files[0];
