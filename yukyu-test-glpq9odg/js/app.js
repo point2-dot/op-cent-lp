@@ -144,6 +144,7 @@
     app.innerHTML = '<header class="top"><h1>有給休暇管理</h1><div class="who"><span>' + fd(TODAY) + ' 現在</span>' + who + '<button class="btn" data-act="mode-staff">スタッフ画面を見る</button></div></header>' +
       '<nav class="tabs" aria-label="メニュー">' + NAV.map((n) => '<button data-act="nav" data-view="' + n[0] + '" class="' + (navOn === n[0] ? 'on' : '') + '">' + n[1] + '</button>').join('') + '</nav>' +
       '<main>' + (loadError ? '<p class="alert danger">' + esc(loadError) + '</p>' : '') + body + '</main>';
+    if (state.view === 'form') updatePreview(document.getElementById('staffform'));
   }
 
   // ---------- 表示用の部品 ----------
@@ -263,7 +264,7 @@
   // ---------- スタッフ登録・編集 ----------
   function viewForm() {
     const s = state.id ? staffById(state.id) : null;
-    const c = s ? (Y.conditionAt(s, TODAY) || {}) : { weeklyDays: 5, weeklyHours: 40, dailyHours: 8, start: '09:30', end: '18:30', breakMin: 60 };
+    const c = s ? (Y.conditionAt(s, TODAY) || {}) : {};
     const g = s || {};
     const locked = s && (s.grants || []).some((x) => x.idx !== null && x.idx !== undefined);
     const sel = (name, val, list) => '<label class="f">' + name[1] + '<select name="' + name[0] + '">' + list.map((v) => '<option' + (v === val ? ' selected' : '') + '>' + v + '</option>').join('') + '</select></label>';
@@ -281,13 +282,46 @@
       field('勤務開始', 'start', c.start, 'time') + field('勤務終了', 'end', c.end, 'time') + field('休憩（分）', 'breakMin', c.breakMin, 'number', 'min="0"') + field('休憩の開始（空欄なら自動）', 'breakStart', c.breakStart, 'time') + '<div><button type="button" class="btn sm" data-act="fill-daily">開始・終了・休憩から1日の時間を計算</button></div>' +
       '<label class="f">午前半休の日の勤務時間帯（空欄なら自動）<input name="amLeaveWork" value="' + esc(c.amLeaveWork || '') + '" placeholder="例：14:30〜18:30"></label>' +
       '<label class="f">午後半休の日の勤務時間帯（空欄なら自動）<input name="pmLeaveWork" value="' + esc(c.pmLeaveWork || '') + '" placeholder="例：09:30〜13:30"></label>' +
-      (s ? field('条件の変更日（条件を変えたときだけ）', 'changeDate', '', 'date') : '') + '</div>' +
+      (s ? field('条件の変更日（条件を変えたときだけ）', 'changeDate', '', 'date') + '<label class="f"><span><input type="checkbox" name="fixMistake"> 入力の間違いを直す（変更ではなく、最初からこの条件だった場合）</span></label>' : '') + '</div>' +
+      '<div id="condPreview" class="alert info" aria-live="polite"></div>' +
       '<label class="f" style="margin-top:.8rem">メモ<textarea name="memo" rows="2">' + esc(g.memo || '') + '</textarea></label>' +
       '<p class="form-err" id="formerr" role="alert" hidden></p>' +
       '<div class="row" style="margin-top:.8rem"><button class="btn primary" type="submit">保存</button><button type="button" class="btn" data-act="' + (s ? 'open" data-id="' + s.id : 'nav" data-view="staff') + '">戻る</button></div></form></section>';
   }
 
   const CONDITION_KEYS = ['weeklyDays', 'annualDays', 'weeklyHours', 'dailyHours', 'start', 'end', 'breakMin', 'breakStart', 'amLeaveWork', 'pmLeaveWork'];
+  // 勤務条件の入力チェック（週時間と「日数×1日の時間」が合わないときなど）
+  function condWarnings(cond, emp) {
+    const wd = Y.num(cond.weeklyDays), dh = Y.num(cond.dailyHours), wh = Y.num(cond.weeklyHours);
+    const out = { mismatch: '', notes: [] };
+    if (wd !== null && dh !== null && wh !== null && Math.abs(wh - wd * dh) > 1) {
+      out.mismatch = '週所定労働時間（' + wh + '時間）が、週の日数×1日の時間（' + wd + '日×' + dh + '時間＝' + wd * dh + '時間）と合っていません。入力を確認してください。';
+    }
+    if (emp === 'パート' && wh !== null && wh >= 30 && wd !== null && wd <= 4) out.notes.push('週30時間以上のため、パートでも通常付与（正社員と同じ日数）になります。');
+    return out;
+  }
+  function updatePreview(f) {
+    const box = document.getElementById('condPreview');
+    if (!box || !f) return;
+    const cond = {};
+    CONDITION_KEYS.forEach((k) => { cond[k] = f.elements[k] ? f.elements[k].value.trim() : ''; });
+    const emp = f.elements.employment.value, hire = f.elements.hireDate.value || '2000-01-01';
+    const cls = Y.classify(cond, emp);
+    const w = condWarnings(cond, emp);
+    let html;
+    if (cls.type === 'unknown') html = '<strong>付与日数はまだ計算できません</strong>：週所定労働日数・週所定労働時間などを入力してください。';
+    else {
+      const tmp = { employment: emp, hireDate: hire, conditions: [Object.assign({ from: '1900-01-01' }, cond)] };
+      const row = Y.TENURE_LABELS.map((l, i) => l + '＝' + Y.legalGrantDays(tmp, i, Y.addMonths(hire, Y.TENURE_MONTHS[i])).days + '日').join('／');
+      const name = cls.type === 'regular' ? '通常付与' : cls.type === 'proportional' ? '比例付与（週' + cls.band + '日）' : '法定付与なし';
+      html = '<strong>この条件の判定：' + name + '</strong>（' + esc(cls.reason) + '）<br>付与日数：' + row;
+    }
+    if (w.mismatch) html += '<br><strong>⚠ ' + esc(w.mismatch) + '</strong>';
+    w.notes.forEach((n) => { html += '<br>ℹ ' + esc(n); });
+    box.innerHTML = html;
+    box.className = 'alert ' + (w.mismatch ? 'warn' : 'info');
+  }
+
   async function submitStaffForm(form) {
     if (!requireAdmin()) return;
     const f = Object.fromEntries(new FormData(form));
@@ -308,6 +342,8 @@
     }
     const cond = {};
     CONDITION_KEYS.forEach((k) => { cond[k] = (f[k] || '').trim(); });
+    const cw = condWarnings(cond, f.employment);
+    if (cw.mismatch && !(await confirmDlg('勤務条件の確認', esc(cw.mismatch) + '<br>このまま保存しますか？（付与日数は、週所定労働日数・週所定労働時間をもとに計算されます）', 'このまま保存'))) return;
 
     if (!s) {
       const ns = { id: Y.uid(), code, name, employment: f.employment, hireDate: f.hireDate, firstGrantDate: f.firstGrantDate, status: f.status, retireDate: f.retireDate || '', memo: f.memo || '', conditions: [Object.assign({ from: f.hireDate }, cond)], grants: [], usages: [], attendance: {} };
@@ -322,7 +358,10 @@
     const before = JSON.stringify([s.code, s.name, s.employment, s.hireDate, s.status, s.retireDate, s.memo]);
     const cur = Y.conditionAt(s, TODAY) || {};
     const condChanged = CONDITION_KEYS.some((k) => String(cur[k] === undefined || cur[k] === null ? '' : cur[k]) !== cond[k]);
-    if (condChanged) {
+    if (condChanged && f.fixMistake) {
+      Object.assign(Y.conditionAt(s, TODAY), cond);
+      log('勤務条件の訂正', s, '入力の間違いを訂正：週' + (cond.weeklyDays || '—') + '日／週' + (cond.weeklyHours || '—') + '時間／1日' + (cond.dailyHours || '—') + '時間');
+    } else if (condChanged) {
       if (!f.changeDate) return err('勤務条件が変わっています。「条件の変更日」を入力してください（以前の条件は履歴に残ります）');
       const same = s.conditions.find((x) => x.from === f.changeDate);
       if (same) Object.assign(same, cond); else s.conditions.push(Object.assign({ from: f.changeDate }, cond));
@@ -347,10 +386,36 @@
       '<div class="row noprint">' + (state.isAdmin ? '<button class="btn" data-act="staff-edit" data-id="' + s.id + '">情報を編集</button>' : '') + '<button class="btn" data-act="ledger" data-id="' + s.id + '">印刷用の台帳</button><button class="btn" data-act="csv-staff" data-id="' + s.id + '">CSV出力</button></div></div></section>' + tabs + body;
   }
 
+  // いまの勤務条件で計算し直した日数と、付与済みの日数が違うもの（手動で変えた分は除く）
+  function recalcDiffs(s) {
+    return (s.grants || []).filter((g) => g.status === 'granted' && g.source === 'auto' && !g.manualDays && !g.forced && g.idx !== null && g.idx !== undefined)
+      .map((g) => ({ g, legal: Y.legalGrantDays(s, g.idx, g.date) })).filter((x) => x.legal.days !== null && x.legal.days !== Number(x.g.days));
+  }
+  async function grantRecalc(el) {
+    if (!requireAdmin()) return;
+    const s = staffById(el.dataset.sid), g = s.grants.find((x) => x.id === el.dataset.id);
+    const legal = Y.legalGrantDays(s, g.idx, g.date);
+    if (!(await confirmDlg('付与日数を計算し直す', fd(g.date) + ' の付与を、いまの勤務条件で計算し直します。<br><strong>' + g.days + '日 → ' + legal.days + '日</strong><br>' + esc(legal.basis) + '<br>よろしいですか？（記録は修正履歴に残ります）', '計算し直す'))) return;
+    log('付与日数の再計算', s, fd(g.date) + ' ' + g.days + '日 → ' + legal.days + '日');
+    g.days = legal.days; g.legalDays = legal.days; g.basis = legal.basis;
+    commit('計算し直しました');
+  }
+
+  async function grantRecalcAll(el) {
+    if (!requireAdmin()) return;
+    const s = staffById(el.dataset.sid), diffs = recalcDiffs(s);
+    if (!diffs.length) return;
+    if (!(await confirmDlg('まとめて計算し直す', '次の付与を、いまの勤務条件で計算し直します。<br>' + diffs.map((x) => fd(x.g.date) + '：' + x.g.days + '日 → <strong>' + x.legal.days + '日</strong>').join('<br>') + '<br>よろしいですか？（記録は修正履歴に残ります）', 'まとめて計算し直す'))) return;
+    diffs.forEach((x) => { log('付与日数の再計算', s, fd(x.g.date) + ' ' + x.g.days + '日 → ' + x.legal.days + '日'); x.g.days = x.legal.days; x.g.legalDays = x.legal.days; x.g.basis = x.legal.basis; });
+    commit('計算し直しました');
+  }
+
   function tabSummary(s) {
     const a = analysis(s), H = a.H;
     const stat = (k, v, cls) => '<div class="stat ' + (cls || '') + '"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>';
     let warn = '';
+    const diffs = recalcDiffs(s);
+    if (diffs.length) warn += '<div class="alert warn"><strong>付与日数が、いまの勤務条件で計算した日数と違います</strong>：' + diffs.map((x) => fd(x.g.date) + ' ' + x.g.days + '日（計算上は ' + x.legal.days + '日）').join('、') + '。勤務条件が合っていれば、下のボタンで直せます。<br><button class="btn sm primary" data-act="grant-recalc-all" data-sid="' + s.id + '">まとめて計算し直す</button></div>';
     if (a.pending.length) warn += '<div class="alert warn">付与が保留になっています：' + a.pending.map((g) => fd(g.date) + '（' + (g.pendingReason === 'attendance' ? '出勤率8割未満' : '勤務条件の不足') + '）').join('、') + '。「付与履歴」で確認してください。</div>';
     if (a.shortages.length) warn += '<div class="alert danger">残高より多く取得した記録があります。「取得履歴」で確認してください。</div>';
     if (a.expiringSoon.length) warn += '<div class="alert danger">' + db.settings.expiryWarnDays + '日以内に失効：' + a.expiringSoon.map((g) => bal(g.unused, H) + '（' + fd(g.expire) + 'に失効）').join('、') + '</div>';
@@ -377,6 +442,7 @@
       const kind = g.kind === 'extra' ? '独自（法定上乗せ）' : g.source === 'manual' ? '手動（法定）' : '定期付与';
       const diff = g.legalDays !== null && g.legalDays !== undefined && Number(g.days) !== Number(g.legalDays) && g.status === 'granted' ? '<br><span class="small muted">法定 ' + g.legalDays + '日</span>' : '';
       const acts = !admin ? '' : (g.status === 'void' ? '' :
+ (recalcDiffs(s).some((x) => x.g.id === g.id) ? '<button class="btn sm primary" data-act="grant-recalc" data-sid="' + s.id + '" data-id="' + g.id + '">計算し直す</button> ' : '') +
         '<button class="btn sm" data-act="grant-days" data-sid="' + s.id + '" data-id="' + g.id + '">日数変更</button> ' +
         '<button class="btn sm" data-act="grant-expire" data-sid="' + s.id + '" data-id="' + g.id + '">期限変更</button> ' +
         (g.status === 'pending' ? '<button class="btn sm" data-act="grant-reeval" data-sid="' + s.id + '" data-id="' + g.id + '">再判定</button> <button class="btn sm" data-act="grant-force" data-sid="' + s.id + '" data-id="' + g.id + '">付与する</button> ' : '') +
@@ -559,7 +625,7 @@
       d('⑩ こんなときは？',
         '<ul><li><strong>入力できない（ボタンが押せない）</strong>：管理者パスワードが設定されている場合は、右上の「管理者ログイン」から入ってください。</li>' +
         '<li><strong>データが空になった</strong>：別の端末やブラウザで開いていないか確認してください。バックアップがあれば戻せます。</li>' +
-        '<li><strong>付与日数が思っていたのと違う</strong>：スタッフの画面の「付与履歴」の右端に、計算の根拠（勤続期間・通常か比例か）が出ます。勤務条件が合っているか確認してください。</li>' +
+        '<li><strong>付与日数が思っていたのと違う</strong>：スタッフの画面の「付与履歴」の右端に、計算の根拠（勤続期間・通常か比例か）が出ます。勤務条件が合っているか確認してください。<br>間違っていた場合：「情報を編集」で勤務条件を直し、「入力の間違いを直す」にチェックを入れて保存 → 残高の画面に出る「まとめて計算し直す」を押すと、日数が直ります。</li>' +
         '<li><strong>法律の数字について</strong>：このアプリは、労働基準法の付与日数・2年の時効・年5日義務などに沿って計算しますが、個別の判断が必要な場合は、社会保険労務士などにご確認ください。</li></ul>') +
       '</section>';
   }
@@ -637,7 +703,7 @@
     'entry-reset': () => { state.entry = { staffId: state.entry.staffId, date: TODAY, kind: 'day', hours: '', note: '', editId: null }; state.entryError = ''; render(); },
     'entry-for': (el) => { state.entry = { staffId: el.dataset.id, date: TODAY, kind: 'day', hours: '', note: '', editId: null }; go('entry'); },
     'entry-save': entrySave, 'usage-edit': usageEdit, 'usage-cancel': usageCancel,
-    'grant-add': grantAdd, 'grant-days': grantDays, 'grant-expire': grantExpire, 'grant-void': grantVoid, 'grant-reeval': grantReeval, 'grant-force': grantForce,
+    'grant-add': grantAdd, 'grant-recalc': grantRecalc, 'grant-recalc-all': grantRecalcAll, 'grant-days': grantDays, 'grant-expire': grantExpire, 'grant-void': grantVoid, 'grant-reeval': grantReeval, 'grant-force': grantForce,
     'att-edit': attEdit, 'obl-edit': oblEdit,
     'pw-set': pwSet, 'pw-clear': pwClear, backup, restore: () => document.getElementById('restorefile').click(),
   };
@@ -811,6 +877,7 @@
   });
   document.addEventListener('input', (ev) => {
     const el = ev.target;
+    if (el.form && el.form.id === 'staffform') updatePreview(el.form);
     if (el.dataset.live) {
       state[el.dataset.live] = el.value; render();
       const n = document.getElementById(el.id); if (n) { n.focus(); if (n.setSelectionRange && n.type !== 'select-one') n.setSelectionRange(n.value.length, n.value.length); }
@@ -818,6 +885,7 @@
   });
   document.addEventListener('change', (ev) => {
     const el = ev.target;
+    if (el.form && el.form.id === 'staffform') updatePreview(el.form);
     if (el.dataset.live) return;
     if (el.dataset.me) { state.me = el.value; localStorage.setItem('yukyu_me', el.value); render(); return; }
     if (el.dataset.entry) { state.entry[el.dataset.entry] = el.value; state.entryError = ''; if (!el.dataset.nore) render(); }
