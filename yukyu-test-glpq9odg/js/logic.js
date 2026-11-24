@@ -195,8 +195,10 @@
 
   // ---------- 残高の計算（付与ごとに管理、古い付与分から消化） ----------
   // asOf まで（opts.all のときは未来日の取得も含めて）取得を順に割り当てる
+  // opts.order：'oldest'＝古い付与分から消化（既定）／'newest'＝新しい付与分から消化
   function replay(staff, asOf, opts) {
     const all = !!(opts && opts.all);
+    const newestFirst = !!(opts && opts.order === 'newest');
     const grants = (staff.grants || [])
       .filter((g) => g.status === 'granted' && Number(g.days) > 0)
       .map((g) => ({
@@ -212,7 +214,7 @@
     const allocations = [];
     for (const u of usages) {
       let need = Number(u.days);
-      for (const g of grants) {
+      for (const g of (newestFirst ? grants.slice().reverse() : grants)) {
         if (need <= EPS) break;
         if (g.date <= u.date && u.date < g.expire) {
           const avail = g.days - g.used;
@@ -291,8 +293,9 @@
     const oblWarn = st.obligationWarnDays !== undefined ? st.obligationWarnDays : 90;
     const cond = conditionAt(staff, today);
     const H = cond ? hourUnit(cond) : null;
-    const now = replay(staff, today);
-    const fut = replay(staff, today, { all: true });
+    const order = st.consumeOrder === 'newest' ? 'newest' : 'oldest';
+    const now = replay(staff, today, { order });
+    const fut = replay(staff, today, { all: true, order });
     const live = now.grants.filter((g) => g.date <= today);
     const out = {
       cond, H, hasGrant: live.length > 0,
@@ -309,7 +312,7 @@
       out.periodStart = ps;
       out.periodEnd = addDays(addYears(ps, 1), -1);
       out.granted = sum(live.filter((g) => g.date === ps).map((g) => g.days));
-      out.carry = sum(replay(staff, addDays(ps, -1)).grants.filter((g) => g.date <= addDays(ps, -1)).map((g) => g.remaining));
+      out.carry = sum(replay(staff, addDays(ps, -1), { order }).grants.filter((g) => g.date <= addDays(ps, -1)).map((g) => g.remaining));
       for (const u of staff.usages || []) {
         if (u.status !== 'active' || u.date < ps || u.date > today) continue;
         if (u.kind === 'hour') { out.usedHourDays += Number(u.days); out.usedHours += Number(u.hours); }
@@ -399,11 +402,11 @@
 
     // 残高が足りるか（その日に使える付与分から古い順に引き当てて確認）
     const base = Object.assign({}, staff, { usages: others });
-    const baseShort = replay(base, today, { all: true }).shortages.length;
+    const baseShort = replay(base, today, { all: true, order: st.consumeOrder }).shortages.length;
     const test = Object.assign({}, staff, { usages: others.concat([usage]) });
-    const r = replay(test, today, { all: true });
+    const r = replay(test, today, { all: true, order: st.consumeOrder });
     if (r.shortages.length > baseShort) {
-      const avail = sum(replay(base, today, { all: true }).grants
+      const avail = sum(replay(base, today, { all: true, order: st.consumeOrder }).grants
         .filter((g) => g.date <= input.date && input.date < g.expire).map((g) => g.unused));
       return { ok: false, error: 'この日に使える有給の残りが足りません（この日に使えるのは ' + formatBalance(avail, H) + '）' };
     }
