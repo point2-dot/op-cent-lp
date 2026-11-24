@@ -18,7 +18,7 @@
   function defaultDB() {
     return {
       version: 1,
-      settings: { hourlyEnabled: true, hourCapDays: 5, expiryWarnDays: 30, obligationWarnDays: 90, adminHash: '', lastBackup: '' },
+      settings: { hourlyEnabled: true, consumeOrder: 'newest', hourCapDays: 5, expiryWarnDays: 30, obligationWarnDays: 90, adminHash: '', lastBackup: '' },
       staff: [], audit: [],
     };
   }
@@ -432,7 +432,7 @@
 
   function tabGrants(s) {
     const a = analysis(s);
-    const rp = Y.replay(s, TODAY);
+    const rp = Y.replay(s, TODAY, { order: db.settings.consumeOrder });
     const by = new Map(rp.grants.map((g) => [g.id, g]));
     const grants = (s.grants || []).slice().sort((x, y) => y.date.localeCompare(x.date));
     const admin = state.isAdmin;
@@ -508,7 +508,7 @@
     if (!s) return '';
     const a = analysis(s);
     const grants = (s.grants || []).filter((g) => g.status !== 'void').sort((x, y) => x.date.localeCompare(y.date));
-    const rp = new Map(Y.replay(s, TODAY).grants.map((g) => [g.id, g]));
+    const rp = new Map(Y.replay(s, TODAY, { order: db.settings.consumeOrder }).grants.map((g) => [g.id, g]));
     const gt = grants.map((g) => { const r = rp.get(g.id); return '<tr><td>' + fd(g.date) + '</td><td>' + g.days + '日' + (g.status === 'pending' ? '（保留）' : '') + '</td><td>' + fd(lastDay(Y.expireOf(g))) + 'まで</td><td>' + (r ? bal(r.used, a.H) : '—') + '</td><td>' + (r ? bal(r.expired, a.H) : '—') + '</td><td>' + (r ? bal(r.remaining, a.H) : '—') + '</td></tr>'; }).join('');
     const ut = (s.usages || []).filter((u) => u.status === 'active').sort((x, y) => x.date.localeCompare(y.date)).map((u) => '<tr><td>' + fd(u.date) + '</td><td>' + Y.KIND_LABEL[u.kind] + (u.kind === 'hour' ? '（' + u.hours + '時間）' : '') + '</td><td>' + esc(u.note || '') + '</td></tr>').join('');
     return '<section class="card ledger"><div class="row between noprint"><button class="btn" data-act="open" data-id="' + s.id + '">戻る</button><button class="btn primary" data-act="print">印刷する</button></div>' +
@@ -534,7 +534,7 @@
     const d = (t, b, o) => '<details' + (o ? ' open' : '') + '><summary>' + t + '</summary><div class="manual-body">' + b + '</div></details>';
     return '<section class="card manual"><h2>使い方</h2>' +
       d('この画面でわかること', '<ul><li>いま使える有給の日数（「7日3時間」のように、日と時間で出ます）</li><li>次にいつ、何日もらえるか</li><li>使わないと消えてしまう分と、その日付</li><li>これまでに取った日の一覧</li></ul><p>この画面は<strong>見るだけ</strong>です。有給を取りたいとき・記録が違うときは、管理者に伝えてください。</p>', true) +
-      d('有給が消えるのはいつ？', '<p>有給は、もらった日から<strong>2年</strong>たつと使えなくなります。「使うと消える分」に、消える日が出ます。古い分から先に使われるので、取るときは自動で古い分から減ります。</p>') +
+      d('有給が消えるのはいつ？', '<p>有給は、もらった日から<strong>2年</strong>たつと使えなくなります。「使うと消える分」に、消える日が出ます。取るときは、' + (db.settings.consumeOrder === 'newest' ? '新しくもらった分' : '古い分') + 'から先に減ります。</p>') +
       d('「年5日」とは？', '<p>1年に10日以上もらう人は、法律で<strong>年5日は有給を取る</strong>決まりです。画面に「あと◯日」と出たら、期限までに取ってください。1日休みは1日、半休は0.5日として数えます。1時間ごとの有給（時間単位）は、この5日には入りません。</p>') +
       d('時間単位って？', '<p>1時間ごとに取れる有給です。あなたの「1日分」は、所定労働時間（例：8時間）で数えます。年に5日分までです。</p>') +
       d('見方がわからないとき', '<p>名前を選び間違えていないか確認してください。数字が違うと思ったら、管理者に聞いてください。</p>') + '</section>';
@@ -558,7 +558,7 @@
     else if (o.state === 'ok') notes += '<div class="alert info">今年の「年5日」の取得は、達成しています。</div>';
     if (a.pending.length) notes += '<div class="alert warn">付与の確認中のものがあります。くわしくは管理者に聞いてください。</div>';
 
-    const rp = new Map(Y.replay(s, TODAY).grants.map((g) => [g.id, g]));
+    const rp = new Map(Y.replay(s, TODAY, { order: db.settings.consumeOrder }).grants.map((g) => [g.id, g]));
     const gtr = (s.grants || []).filter((g) => g.status === 'granted' && g.date <= TODAY).sort((x, y) => y.date.localeCompare(x.date)).map((g) => {
       const r = rp.get(g.id);
       return '<tr><td>' + fd(g.date) + '</td><td>' + g.days + '日</td><td>' + fd(lastDay(Y.expireOf(g))) + 'まで</td><td>' + (r ? bal(r.used, H) : '—') + '</td><td>' + (r && r.expired > 1e-6 ? '消えた ' + bal(r.expired, H) : '<strong>' + (r ? bal(r.remaining, H) : '—') + '</strong>') + '</td></tr>';
@@ -606,7 +606,7 @@
         '<li><strong>次回付与日</strong>：次に有給が増える日と、増える日数の見込みです。</li>' +
         '<li><strong>失効予定</strong>：使わないと消えてしまう日数と日付です。有給は付与から<strong>2年</strong>で時効になります。<span class="tag danger">赤</span>は30日以内に消えます。</li>' +
         '<li><strong>年5日義務</strong>：年10日以上もらう人は、会社が年5日は取らせる義務があります。「残2日」のように不足が出て、期限が近いと<span class="tag warn">黄</span>・<span class="tag danger">赤</span>になります。1日は1日、半休は0.5日として数え、<strong>時間単位は数えません</strong>。</li>' +
-        '<li>有給は、<strong>古い付与分から先に使われます</strong>（消えるのが早いものから減ります）。</li></ul>') +
+        '<li>有給を使う順番は、設定で決まります（いまは<strong>' + (db.settings.consumeOrder === 'newest' ? '新しい付与分から先に' : '古い付与分から先に') + '</strong>使われます）。付与から<strong>2年たつと、使っていない分は自動で消えます</strong>（失効）。</li></ul>') +
       d('⑥ 出勤率（8割）と付与の「保留」',
         '<p>有給は、直前1年間の出勤率が8割以上の人に付与されます。スタッフの画面の「出勤率」から、<strong>全労働日</strong>（出勤すべき日）・<strong>出勤日数</strong>・<strong>みなし出勤日数</strong>を入れます。</p>' +
         '<ul><li>みなし出勤：産前産後休業・育児休業・介護休業・仕事中のけがによる休み・<strong>有給を取った日</strong>は、出勤したものとして数えます。</li>' +
@@ -636,10 +636,11 @@
     const dis = state.isAdmin ? '' : ' disabled';
     return manualHTML() + '<section class="card"><h2>ルールの設定</h2><form id="settingsform" class="grid c2">' +
       '<label class="f"><span><input type="checkbox" name="hourlyEnabled"' + (st.hourlyEnabled ? ' checked' : '') + dis + '> 時間単位年休を認める（労使協定を結んでいる）</span></label>' +
+      '<label class="f">有給を使う順番<select name="consumeOrder"' + dis + '><option value="newest"' + (st.consumeOrder === 'newest' ? ' selected' : '') + '>新しい付与分から使う</option><option value="oldest"' + (st.consumeOrder !== 'newest' ? ' selected' : '') + '>古い付与分から使う</option></select></label>' +
       field('時間単位年休の年間上限（日分）', 'hourCapDays', st.hourCapDays, 'number', 'min="0" max="5" step="1"' + dis) +
       field('失効の何日前に知らせるか', 'expiryWarnDays', st.expiryWarnDays, 'number', 'min="1"' + dis) +
       field('年5日義務の期限の何日前に注意するか', 'obligationWarnDays', st.obligationWarnDays, 'number', 'min="1"' + dis) +
-      '<div><button class="btn primary" type="submit"' + dis + '>保存</button></div></form><p class="hint">時間単位年休は、法律で年5日分までです。労使協定を結んでいない場合はチェックを外してください。</p></section>' +
+      '<div><button class="btn primary" type="submit"' + dis + '>保存</button></div></form><p class="hint"><strong>使う順番</strong>：「新しい付与分から」にすると、古い分が使われないまま、付与から2年で消えやすくなります（スタッフには不利になります）。法律で順番は決まっていませんが、就業規則に定めがあれば、それに合わせてください。変更すると、過去の取得も含めて、残高の内訳が計算し直されます（合計の残高は変わりません）。<br>時間単位年休は、法律で年5日分までです。労使協定を結んでいない場合はチェックを外してください。</p></section>' +
       '<section class="card"><h2>管理者パスワード</h2><p>' + (st.adminHash ? '設定済み（ログインしていない人は、見るだけで、変更できません）' : '未設定（誰でも変更できる状態です）') + '</p>' +
       '<div class="row"><button class="btn primary" data-act="pw-set"' + dis + '>' + (st.adminHash ? 'パスワードを変更' : 'パスワードを設定') + '</button>' + (st.adminHash ? '<button class="btn" data-act="pw-clear"' + dis + '>パスワードを解除</button>' : '') + '</div>' +
       '<p class="hint">このアプリはこのパソコンのブラウザの中だけで動く簡易的な鍵です。ブラウザの開発者ツールに詳しい人なら外せるため、本格的な権限管理（スタッフ本人が見るなど）は、将来サーバー版にするときに作ります。</p></section>' +
@@ -667,7 +668,7 @@
   function usageRows(s) { return (s.usages || []).slice().sort((x, y) => x.date.localeCompare(y.date)).map((u) => [s.code, s.name, u.date, Y.KIND_LABEL[u.kind], u.kind === 'hour' ? u.hours : '', u.days, u.status === 'active' ? '有効' : '取消', u.note || '', u.cancelReason || '']); }
   function csvStaff(s) {
     const a = analysis(s);
-    const rp = new Map(Y.replay(s, TODAY).grants.map((g) => [g.id, g]));
+    const rp = new Map(Y.replay(s, TODAY, { order: db.settings.consumeOrder }).grants.map((g) => [g.id, g]));
     const rows = [['【付与】', '付与日', '日数', '法定日数', '状態', '使える期限', '取得済み', '失効', '残り']];
     (s.grants || []).slice().sort((x, y) => x.date.localeCompare(y.date)).forEach((g) => { const r = rp.get(g.id); rows.push(['', g.date, g.days, g.legalDays === null || g.legalDays === undefined ? '' : g.legalDays, g.status, lastDay(Y.expireOf(g)), r ? round1(r.used * 1000) / 1000 : '', r ? round1(r.expired * 1000) / 1000 : '', r ? round1(r.remaining * 1000) / 1000 : '']); });
     rows.push([], ['【取得】', 'スタッフ', '取得日', '区分', '時間数', '消費日数', '状態', 'メモ', '取消理由']);
@@ -868,10 +869,11 @@
       if (!requireAdmin()) return;
       const f = Object.fromEntries(new FormData(ev.target));
       db.settings.hourlyEnabled = !!f.hourlyEnabled;
+      db.settings.consumeOrder = f.consumeOrder === 'oldest' ? 'oldest' : 'newest';
       db.settings.hourCapDays = Math.min(5, Math.max(0, Number(f.hourCapDays) || 0));
       db.settings.expiryWarnDays = Math.max(1, Number(f.expiryWarnDays) || 30);
       db.settings.obligationWarnDays = Math.max(1, Number(f.obligationWarnDays) || 90);
-      log('設定の変更', null, '時間単位年休：' + (db.settings.hourlyEnabled ? '認める（年' + db.settings.hourCapDays + '日分）' : '認めない'));
+      log('設定の変更', null, '消化の順番：' + (db.settings.consumeOrder === 'newest' ? '新しい付与分から' : '古い付与分から') + '／時間単位年休：' + (db.settings.hourlyEnabled ? '認める（年' + db.settings.hourCapDays + '日分）' : '認めない'));
       commit('保存しました');
     }
   });
